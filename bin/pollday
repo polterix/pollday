@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'pollday';
+
+var cli = require('commander');
+
+cli
+  .version('0.0.1')
+  .option('-p, --port', 'Listening port', 9091)
+  .parse(process.argv);
+
+var Server = require('../lib/pollday-server.js');
+
+var server = new Server(cli.port);
