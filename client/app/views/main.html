@@ -1,0 +1,19 @@
+<strong>{{ connectedUsers }}</strong>
+
+<ul>
+    <li ng-repeat="choice in choices">
+    <span>{{choice}}</span>
+    </li>
+</ul>
+<form ng-submit="addChoice()">
+    <input type="text" ng-model="choiceText"  size="30"
+    placeholder="add new choice here">
+    <input class="btn btn-primary" type="submit" value="add">
+    <button class="btn btn-primary btn-large" ng-click="start()">Start</button>
+</form>
+
+<ul>
+    <li ng-repeat="choice in choices">
+    <a href ng-click="vote($index)">{{choice}} [{{ results[$index] }}]</a>
+    </li>
+</ul>
