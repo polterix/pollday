@@ -22,7 +22,8 @@ angular.module('polldayApp')
       $scope.connectedUsers = data
 
     Pldsocket.on 'newPoll', (datas) ->
-      $scope.choices = datas.choices
+      if typeof datas.choices != 'undefined'
+        $scope.choices = datas.choices
 
     Pldsocket.on 'results', (datas) ->
       if datas.length

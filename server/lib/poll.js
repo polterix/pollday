@@ -2,15 +2,15 @@
   'use strict';
 
   var Poll = function(choices) {
-    this.choices = choices
-    this.results = []
+    this.choices = choices;
+    this.results = [];
   }
 
   Poll.prototype.answer = function(choiceIndex) {
     if (typeof this.results[choiceIndex] !== "undefined") {
       this.results[choiceIndex]++;
     } else {
-      this.results[choiceIndex] = 0;
+      this.results[choiceIndex] = 1;
     }
   }
 
