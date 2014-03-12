@@ -29,7 +29,7 @@
 
 <div ng-show="mode == 'normal'">
     <h2>{{ poll.title }}</h2>
-    <form ng-submit="vote(answerIndex)">
+    <form ng-submit="vote(answerIndex)" ng-hide="role == 'admin'">
         <div class="radio" ng-repeat="choice in poll.choices">
             <label>
                 <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
@@ -37,8 +37,8 @@
             </label>
         </div>
         <button class="btn btn-primary btn-lg btn-block">Voter</button>
-        <button class="btn btn-primary btn-lg btn-block" ng-click="stop()">Arrêter</button>
     </form>
+    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
 <div ng-show="mode == 'results'">

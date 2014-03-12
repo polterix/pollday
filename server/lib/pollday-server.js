@@ -43,6 +43,10 @@ Server = (function() {
         answered = true;
       });
 
+      socket.on('endPoll', function(poll) {
+        _this.endCurrentPoll();
+      });
+
       socket.on('newPoll', function(poll) {
         _this.updateStatus(_this.STATUS_POLL_IN_PROGRESS);
         role = 'admin';
@@ -83,7 +87,9 @@ Server = (function() {
   }
 
   Server.prototype.endCurrentPoll = function() {
-    this.updateStatus(this.STATUS_NO_POLL);
+    this.status = this.STATUS_NO_POLL;
+    this.updateStatus(this.STATUS_POLL_ENDED);
+    this.broadCast('results', this.currentPoll.getResults());
   }
 
   Server.prototype.createIOInstance = function(socketApp) {

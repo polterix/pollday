@@ -7,7 +7,6 @@ angular.module('polldayApp')
     $scope.role = 'user'
 
     $scope.addChoice = () ->
-      $scope.role = 'admin'
       $scope.poll.addChoice($scope.choiceText)
       $scope.choiceText = ''
 
@@ -15,6 +14,7 @@ angular.module('polldayApp')
       $scope.poll.removeChoice(choiceIndex)
 
     $scope.start = () ->
+      $scope.role = 'admin'
       Pldsocket.emit 'newPoll', $scope.poll
 
     $scope.stop = () ->
