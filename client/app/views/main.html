@@ -44,7 +44,7 @@
 <div ng-show="mode == 'results'">
     <h2>{{ poll.title }}</h2>
     <div>
-        <ul ng-repeat="choice in poll.choices">
+        <ul>
             <li ng-repeat="choice in poll.choices">
                 <span>{{choice}}</span> <small>{{ results[$index] }}</small>
             </li>
