@@ -7,10 +7,12 @@ Server = (function() {
     var _this;
     _this = this;
 
-    this.updateFrequency = updateFrequency;
-    this.currentPoll = [];
+    this.currentPoll = undefined;
     this.connectedUsers = 0;
     this.logger = console;
+
+    // Init status
+    this.status = this.STATUS_NO_POLL
 
     // Create server instance
     this.socketApp = require('http').createServer();
@@ -21,30 +23,68 @@ Server = (function() {
 
     this.io.sockets.on('connection', function(socket) {
       var role;
+      var answered = false;
+
       role = 'user';
       _this.connectedUsers++;
       _this.broadCast('connectedUsers', _this.connectedUsers);
-      _this.broadCast('newPoll', _this.currentPoll);
+
+      if(_this.currentPoll) {
+        _this.broadCast('newPoll', _this.currentPoll);
+      }
+
+      _this.broadCast('status', _this.status);
+
       socket.on('newVote', function(index) {
+        if(answered) {
+          return false;
+        }
         _this.currentPoll.answer(index);
-        return _this.broadCast('results', _this.currentPoll.getResults());
+        _this.broadCast('results', _this.currentPoll.getResults());
+        answered = true;
       });
+
       socket.on('newPoll', function(poll) {
+        _this.updateStatus(_this.STATUS_POLL_IN_PROGRESS);
         role = 'admin';
         var poll = _this.createNewPoll(poll.title, poll.choices);
-        _this.currentPoll = poll;
-        return _this.broadCast('newPoll', poll);
+        _this.updateCurrentPoll(poll);
       });
+
       return socket.on('disconnect', function() {
         _this.connectedUsers--;
+
+        // if user is admin end current poll
+        if(role == "admin") {
+          _this.endCurrentPoll();
+        }
+
         return _this.broadCast('connectedUsers', _this.connectedUsers);
       });
     });
   }
 
+  Server.prototype.updateStatus = function(status) {
+    this.status = status;
+    this.broadCast('status', this.status);
+  }
+
+  Server.prototype.updateCurrentPoll = function(poll) {
+    this.currentPoll = poll
+    this.broadCast('newPoll', poll);
+  }
+
+  Server.prototype.STATUS_NO_POLL = 1;
+  Server.prototype.STATUS_POLL_IN_PROGRESS = 2;
+  Server.prototype.STATUS_POLL_ENDED = 3;
+
   Server.prototype.createNewPoll = function(title, choices) {
     var Poll = require('./poll.js');
     return new Poll(title, choices);
+  }
+
+  Server.prototype.endCurrentPoll = function() {
+    this.updateStatus(this.STATUS_NO_POLL);
   }
 
   Server.prototype.createIOInstance = function(socketApp) {

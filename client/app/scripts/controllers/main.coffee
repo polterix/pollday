@@ -3,10 +3,8 @@
 angular.module('polldayApp')
   .controller 'MainCtrl', ['$scope', 'Pldsocket', ($scope, Pldsocket) ->
 
-    $scope.poll = new Poll();
+    $scope.poll = new Poll()
     $scope.role = 'user'
-
-    $scope.answerIndex = 1
 
     $scope.addChoice = () ->
       $scope.role = 'admin'
@@ -23,18 +21,20 @@ angular.module('polldayApp')
       Pldsocket.emit 'endPoll'
 
     $scope.vote = (index) ->
-      console.log 'index', index
+      $scope.mode = 'waiting'
       Pldsocket.emit 'newVote', index
 
     Pldsocket.on 'connectedUsers', (data) ->
       $scope.connectedUsers = data
 
     Pldsocket.on 'newPoll', (datas) ->
-      if typeof datas.choices != 'undefined'
-        $scope.mode = 'normal'
-        $scope.poll = new Poll(datas.title, datas.choices);
-      else
-        $scope.mode = 'edit'
+      $scope.poll = new Poll(datas.title, datas.choices)
+
+    Pldsocket.on 'status', (datas) ->
+      switch datas
+        when 1 then $scope.mode = 'edit'
+        when 2 then $scope.mode = 'normal'
+        when 3 then $scope.mode = 'result'
 
     Pldsocket.on 'results', (datas) ->
       if datas.length
