@@ -3,23 +3,21 @@
 angular.module('polldayApp')
   .controller 'MainCtrl', ['$scope', 'Pldsocket', ($scope, Pldsocket) ->
 
+    $scope.poll = new Poll();
     $scope.role = 'user'
-    $scope.choices = []
-    $scope.results = []
 
     $scope.answerIndex = 1
 
     $scope.addChoice = () ->
       $scope.role = 'admin'
-      console.log($scope.choiceText);
-      $scope.choices.push $scope.choiceText
+      $scope.poll.addChoice($scope.choiceText)
       $scope.choiceText = ''
 
     $scope.removeChoice = (choiceIndex) ->
-      $scope.choices.splice(choiceIndex, 1);
+      $scope.poll.removeChoice(choiceIndex)
 
     $scope.start = () ->
-      Pldsocket.emit 'newPoll', $scope.choices
+      Pldsocket.emit 'newPoll', $scope.poll
 
     $scope.vote = (index) ->
       console.log 'index', index
@@ -31,10 +29,9 @@ angular.module('polldayApp')
     Pldsocket.on 'newPoll', (datas) ->
       if typeof datas.choices != 'undefined'
         $scope.mode = 'normal'
-        $scope.choices = datas.choices
+        $scope.poll = new Poll(datas.title, datas.choices);
       else
         $scope.mode = 'edit'
-
 
     Pldsocket.on 'results', (datas) ->
       if datas.length

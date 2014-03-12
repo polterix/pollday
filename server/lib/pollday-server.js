@@ -29,9 +29,9 @@ Server = (function() {
         _this.currentPoll.answer(index);
         return _this.broadCast('results', _this.currentPoll.getResults());
       });
-      socket.on('newPoll', function(choices) {
+      socket.on('newPoll', function(poll) {
         role = 'admin';
-        var poll = _this.createNewPoll(choices);
+        var poll = _this.createNewPoll(poll.title, poll.choices);
         _this.currentPoll = poll;
         return _this.broadCast('newPoll', poll);
       });
@@ -42,11 +42,9 @@ Server = (function() {
     });
   }
 
-  Server.prototype.createNewPoll = function(choices) {
+  Server.prototype.createNewPoll = function(title, choices) {
     var Poll = require('./poll.js');
-
-    console.log(Poll);
-    return new Poll(choices);
+    return new Poll(title, choices);
   }
 
   Server.prototype.createIOInstance = function(socketApp) {

@@ -3,8 +3,16 @@
 
   var Poll = function(title, choices) {
     this.title = title
-    this.choices = choices;
+    this.choices = choices || [];
     this.results = [];
+  }
+
+  Poll.prototype.addChoice = function (choiceText) {
+    this.choices.push(choiceText)
+  }
+
+  Poll.prototype.removeChoice = function (choiceIndex) {
+    this.choices.splice(choiceIndex, 1);
   }
 
   Poll.prototype.answer = function(choiceIndex) {
@@ -19,7 +27,7 @@
     return this.results;
   }
 
-  module.exports = Poll;
+  window.Poll = Poll;
 
 })();
 
