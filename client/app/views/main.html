@@ -1,19 +1,40 @@
-<strong>{{ connectedUsers }}</strong>
+<div ng-show="mode == 'edit'">
+    <form class="form" role="form" ng-submit="addChoice()">
+        <fieldset>
+            <legend>Créer un sondage</legend>
+            <div class="form-group">
+                <label for="title">Titre</label>
+                <input type="text" class="form-control input-lg" id="title"  ng-model="title" size="30" placeholder="">
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <label class="sr-only" for="newChoiceText">Ajouter un choix</label>
+                    <input type="text" class="form-control input-lg" id="newChoiceText" ng-model="choiceText" size="30" placeholder="Un nouveau choix">
+                    <span class="input-group-btn">
+                        <input class="btn btn-default btn-lg" type="submit" value="Ajouter">
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div>
+        <ul>
+            <li ng-repeat="choice in choices">
+            <span>{{ choice }}</span> <a href ng-click="removeChoice($index)"><span class="glyphicon glyphicon-remove"></span></a>
+            </li>
+        </ul>
+    </div>
+    <button class="btn btn-primary btn-lg btn-block" ng-click="start()">Commencer</button>
+</div>
 
-<ul>
-    <li ng-repeat="choice in choices">
-    <span>{{choice}}</span>
-    </li>
-</ul>
-<form ng-submit="addChoice()">
-    <input type="text" ng-model="choiceText"  size="30"
-    placeholder="add new choice here">
-    <input class="btn btn-primary" type="submit" value="add">
-    <button class="btn btn-primary btn-large" ng-click="start()">Start</button>
-</form>
-
-<ul>
-    <li ng-repeat="choice in choices">
-    <a href ng-click="vote($index)">{{choice}} [{{ results[$index] }}]</a>
-    </li>
-</ul>
+<div ng-show="mode == 'normal'">
+    <form ng-submit="vote(answerIndex)">
+        <div class="radio" ng-repeat="choice in choices">
+            <label>
+                <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
+                {{choice}} <small>{{ results[$index] }}</small></span>
+            </label>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block">Voter</button>
+    </form>
+</div>
