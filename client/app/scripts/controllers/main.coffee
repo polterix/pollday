@@ -34,7 +34,7 @@ angular.module('polldayApp')
       switch datas
         when 1 then $scope.mode = 'edit'
         when 2 then $scope.mode = 'normal'
-        when 3 then $scope.mode = 'result'
+        when 3 then $scope.mode = 'results'
 
     Pldsocket.on 'results', (datas) ->
       if datas.length
