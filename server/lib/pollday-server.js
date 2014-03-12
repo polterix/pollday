@@ -32,6 +32,7 @@ Server = (function() {
 
       if(_this.currentPoll) {
         _this.broadCast('newPoll', _this.currentPoll);
+        _this.broadCast('answererCount', _this.currentPoll.answererCount);
       }
 
       _this.broadCast('status', _this.status);
@@ -42,6 +43,7 @@ Server = (function() {
         }
         _this.currentPoll.answer(index);
         answered = true;
+        _this.broadCast('answererCount', _this.currentPoll.answererCount);
       });
 
       socket.on('endPoll', function(poll) {

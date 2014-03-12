@@ -5,9 +5,11 @@
     this.title = title
     this.choices = choices;
     this.results = [];
+    this.answererCount = 0;
   }
 
   Poll.prototype.answer = function(choiceIndex) {
+    this.answererCount++
     if (typeof this.results[choiceIndex] !== "undefined") {
       this.results[choiceIndex]++;
     } else {

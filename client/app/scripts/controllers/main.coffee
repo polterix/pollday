@@ -16,16 +16,20 @@ angular.module('polldayApp')
     $scope.start = () ->
       $scope.role = 'admin'
       Pldsocket.emit 'newPoll', $scope.poll
+      $scope.mode = 'waiting'
 
     $scope.stop = () ->
       Pldsocket.emit 'endPoll'
 
     $scope.vote = (index) ->
-      $scope.mode = 'waiting'
+      $scope.poll.answered = true
       Pldsocket.emit 'newVote', index
 
     Pldsocket.on 'connectedUsers', (data) ->
       $scope.connectedUsers = data
+
+    Pldsocket.on 'answererCount', (data) ->
+      $scope.answererCount = data
 
     Pldsocket.on 'newPoll', (datas) ->
       $scope.poll = new Poll(datas.title, datas.choices)

@@ -27,7 +27,7 @@
     <button class="btn btn-primary btn-lg btn-block" ng-click="start()">Commencer</button>
 </div>
 
-<div ng-show="mode == 'normal'">
+<div ng-show="mode == 'normal' && role == 'user' && !poll.answered">
     <h2>{{ poll.title }}</h2>
     <form ng-submit="vote(answerIndex)" ng-hide="role == 'admin'">
         <div class="radio" ng-repeat="choice in poll.choices">
@@ -38,7 +38,6 @@
         </div>
         <button class="btn btn-primary btn-lg btn-block">Voter</button>
     </form>
-    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
 <div ng-show="mode == 'results'">
@@ -52,10 +51,12 @@
     </div>
 </div>
 
-<div ng-show="mode == 'waiting'">
+<div ng-show="poll.answered || ( role == 'admin' && mode == 'normal' )">
     <h2>{{ poll.title }}</h2>
     <div>
-        En attente
+        Progression :
+        <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
     </div>
+    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
