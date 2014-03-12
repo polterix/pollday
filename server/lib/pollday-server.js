@@ -40,7 +40,6 @@ Server = (function() {
           return false;
         }
         _this.currentPoll.answer(index);
-        _this.broadCast('results', _this.currentPoll.getResults());
         answered = true;
       });
 
