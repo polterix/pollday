@@ -19,6 +19,9 @@ angular.module('polldayApp')
     $scope.start = () ->
       Pldsocket.emit 'newPoll', $scope.poll
 
+    $scope.stop = () ->
+      Pldsocket.emit 'endPoll'
+
     $scope.vote = (index) ->
       console.log 'index', index
       Pldsocket.emit 'newVote', index
@@ -36,4 +39,5 @@ angular.module('polldayApp')
     Pldsocket.on 'results', (datas) ->
       if datas.length
         $scope.results = datas
+        $scope.mode = 'results'
   ]

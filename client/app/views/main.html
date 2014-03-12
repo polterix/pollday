@@ -37,5 +37,19 @@
             </label>
         </div>
         <button class="btn btn-primary btn-lg btn-block">Voter</button>
+        <button class="btn btn-primary btn-lg btn-block" ng-click="stop()">Arrêter</button>
     </form>
 </div>
+
+<div ng-show="mode == 'results'">
+    <h2>{{ poll.title }}</h2>
+    <form ng-submit="vote(answerIndex)">
+        <div class="radio" ng-repeat="choice in poll.choices">
+            <label>
+                <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
+                {{choice}} <small>{{ results[$index] }}</small></span>
+            </label>
+        </div>
+    </form>
+</div>
+
