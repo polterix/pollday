@@ -3,10 +3,11 @@
 var Server;
 
 Server = (function() {
-  function Server(port, updateFrequency) {
+  function Server(port, resetTimeout) {
     var _this;
     _this = this;
 
+    this.resetTimeout = resetTimeout || 60;
     this.currentPoll = undefined;
     this.connectedUsers = 0;
     this.logger = console;
@@ -87,9 +88,14 @@ Server = (function() {
   }
 
   Server.prototype.endCurrentPoll = function() {
-    this.status = this.STATUS_NO_POLL;
+    var _this = this;
+
     this.updateStatus(this.STATUS_POLL_ENDED);
     this.broadCast('results', this.currentPoll.getResults());
+
+    setTimeout(function() {
+      _this.updateStatus(_this.STATUS_NO_POLL);
+    }, this.resetTimeout * 1000);
   }
 
   Server.prototype.createIOInstance = function(socketApp) {
