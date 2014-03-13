@@ -27,9 +27,9 @@
     <button class="btn btn-primary btn-lg btn-block" ng-click="start()">Commencer</button>
 </div>
 
-<div ng-show="mode == 'normal' && role == 'user' && !poll.answered">
+<div ng-show="mode == 'normal'">
     <h2>{{ poll.title }}</h2>
-    <form ng-submit="vote(answerIndex)" ng-hide="role == 'admin'">
+    <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
         <div class="radio" ng-repeat="choice in poll.choices">
             <label>
                 <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
@@ -38,25 +38,25 @@
         </div>
         <button class="btn btn-primary btn-lg btn-block">Voter</button>
     </form>
+    <div ng-show="(poll.answered || role == 'admin')">
+        Progression :
+        <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
+        {{ answererCount }} <span class="glyphicon glyphicon-bullhorn"></span> / {{ connectedUsers }} <span class="glyphicon glyphicon-user"></span>
+    </div>
+    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
 <div ng-show="mode == 'results'">
     <h2>{{ poll.title }}</h2>
+    <h3>Résultats</h3>
     <div>
         <ul>
-            <li ng-repeat="choice in poll.choices">
-                <span>{{choice}}</span> <small>{{ results[$index] }}</small>
+            <li ng-repeat="result in results | orderBy:'-nbVotes':false">
+                <span>{{ $index+1 }}</span> <span>{{ result.label }}</span> <small>({{ result.nbVotes }} votes)</small>
             </li>
         </ul>
     </div>
 </div>
 
-<div ng-show="poll.answered || ( role == 'admin' && mode == 'normal' )">
-    <h2>{{ poll.title }}</h2>
-    <div>
-        Progression :
-        <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
-    </div>
-    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
-</div>
+
 
