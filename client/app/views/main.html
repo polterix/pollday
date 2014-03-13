@@ -18,7 +18,7 @@
         </fieldset>
     </form>
     <div>
-        <ul>
+        <ul class="list-choice">
             <li ng-repeat="choice in poll.choices">
             <span>{{ choice }}</span> <a href ng-click="removeChoice($index)"><span class="glyphicon glyphicon-remove"></span></a>
             </li>
@@ -31,7 +31,7 @@
     <h2>{{ poll.title }}</h2>
     <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
         <div class="radio" ng-repeat="choice in poll.choices">
-            <label>
+            <label class="icheck-box">
                 <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
                 {{choice}} <small>{{ results[$index] }}</small>
             </label>

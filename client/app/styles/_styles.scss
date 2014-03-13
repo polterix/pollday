@@ -61,9 +61,20 @@ a:hover {
     }
 }
 
+ul {
+    margin-left: 0;
+    padding-left: 0;
+    list-style: inside;
+    li {
+        margin: 0;
+        line-height: 1.3em;
+    }
+}
+
 legend {
     padding-bottom: 8px;
     text-transform: uppercase;
+    text-align: center;
 }
 
 .input-group input.btn {
@@ -91,8 +102,40 @@ h1 {
 // ---------------------------
 
 .create-form {
+    margin-bottom: 20px;
     label {
         @include font-size (1.8);
+    }
+}
+
+.list-choice {
+    margin-bottom: 25px;
+    li {
+        height: 35px;
+        padding: 8px 20px;
+        background-color: $greyDD;
+        position: relative;
+        margin-bottom: 8px;
+        a {
+            position: absolute;
+            height: 20px;
+            width: 50px;
+            text-align: center;
+            right: 0;
+            top:0;
+            height: 35px;
+            line-height: 35px;
+            background-color: $redLNS;
+            color: $white;
+            border: 2px solid $redLNS;
+            &:hover {
+                color: $redLNS;
+                background-color: $white;
+            }
+        }
+    }
+    span {
+
     }
 }
 
