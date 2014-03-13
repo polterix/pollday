@@ -11,6 +11,7 @@ Server = (function() {
     this.currentPoll = undefined;
     this.connectedUsers = 0;
     this.logger = console;
+    this.answererCount = 0;
 
     // Init status
     this.status = this.STATUS_NO_POLL

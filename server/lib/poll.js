@@ -18,7 +18,11 @@
   }
 
   Poll.prototype.getResults = function() {
-    return this.results;
+    var rank = [];
+    for (var i in this.choices) {
+       rank.push(this.results[i] || 0);
+    }
+    return rank;
   }
 
   module.exports = Poll;

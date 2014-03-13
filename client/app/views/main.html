@@ -33,7 +33,7 @@
         <div class="radio" ng-repeat="choice in poll.choices">
             <label>
                 <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
-                {{choice}} <small>{{ results[$index] }}</small></span>
+                {{choice}} <small>{{ results[$index] }}</small>
             </label>
         </div>
         <button class="btn btn-primary btn-lg btn-block">Voter</button>
@@ -43,7 +43,7 @@
         <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
         {{ answererCount }} <span class="glyphicon glyphicon-bullhorn"></span> / {{ connectedUsers }} <span class="glyphicon glyphicon-user"></span>
     </div>
-    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
+    <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
 <div ng-show="mode == 'results'">
@@ -51,20 +51,10 @@
     <h3>Résultats</h3>
     <div>
         <ul>
-            <li ng-repeat="result in results | orderBy:'-nbVotes':false">
-                <span>{{ $index+1 }}</span> <span>{{ result.label }}</span> <small>({{ result.nbVotes }} votes)</small>
+            <li ng-repeat="result in ranking | orderBy:'-nbVotes':false">
+                <span>{{ $index+1 }}</span> <span>{{ result.label }}</span> <small>({{(100*result.nbVotes/answererCount)| number:0}}%)</small>
+                <div progressbar progressmax="answererCount" progressvalue="result.nbVotes"></div>
             </li>
         </ul>
     </div>
 </div>
-
-<div ng-show="poll.answered || ( role == 'admin' && mode == 'normal' )">
-    <h2>{{ poll.title }}</h2>
-    <div>
-        Progression :
-        <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
-    </div>
-    <button class="btn btn-stop btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
-</div>
-
-

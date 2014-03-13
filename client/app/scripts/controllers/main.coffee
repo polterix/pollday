@@ -43,7 +43,7 @@ angular.module('polldayApp')
 
     Pldsocket.on 'results', (datas) ->
       if datas.length
-        $scope.results = for id, count of datas
-          {'id':id, 'label': $scope.poll.choices[id], 'nbVotes':parseInt(count) || 0}
+        $scope.ranking = for id, count of datas
+          {'id':id, 'label': $scope.poll.choices[id], 'nbVotes':count}
         $scope.mode = 'results'
   ]
