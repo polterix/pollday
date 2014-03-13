@@ -46,5 +46,4 @@ angular.module('polldayApp')
         $scope.results = for id, count of datas
           {'id':id, 'label': $scope.poll.choices[id], 'nbVotes':parseInt(count) || 0}
         $scope.mode = 'results'
-        console.log($scope.results);
   ]
