@@ -4,6 +4,10 @@ $font-size-base: 16px;
 
 @import 'sass-bootstrap/lib/bootstrap';
 
+@import 'variables';
+
+
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -91,3 +95,9 @@ body {
         border-bottom: 0;
     }
 }
+
+
+@import 'styles';
+
+
+

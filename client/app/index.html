@@ -9,7 +9,9 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,400italic,700|Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
 
         <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
@@ -24,13 +26,23 @@
       <script src="bower_components/es5-shim/es5-shim.js"></script>
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
+    <div id="wrapper">
+        <header class="header-container">
+            <div class="container">
+                <h1 class="text-center">PollDay</h1>
+            </div>
+        </header>
 
-    <header class="container">
-        <h1 class="text-center">PollDay</h1>
-    </header>
-
-    <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+        <!-- Add your site or application content here -->
+        <div class="main-container">
+            <div class="container" ng-view=""></div>
+        </div>
+        <div class="footer-container">
+            <div class="container">
+                La NetScouade 
+            </div>
+        </div>
+    </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>

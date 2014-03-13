@@ -1,5 +1,5 @@
 <div ng-show="mode == 'edit'">
-    <form class="form" role="form" ng-submit="addChoice()">
+    <form class="form create-form" role="form" ng-submit="addChoice()">
         <fieldset>
             <legend>Créer un sondage</legend>
             <div class="form-group">
@@ -24,7 +24,7 @@
             </li>
         </ul>
     </div>
-    <button class="btn btn-primary btn-lg btn-block" ng-click="start()">Commencer</button>
+    <button class="btn btn-success btn-lg btn-block" ng-click="start()">Commencer</button>
 </div>
 
 <div ng-show="mode == 'normal' && role == 'user' && !poll.answered">
@@ -57,6 +57,6 @@
         Progression :
         <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
     </div>
-    <button class="btn btn-primary btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
+    <button class="btn btn-stop btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
 
