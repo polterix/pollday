@@ -6,7 +6,6 @@ Server = (function() {
   function Server(port, resetTimeout) {
     var _this;
     _this = this;
-
     this.resetTimeout = resetTimeout || 60;
     this.currentPoll = undefined;
     this.connectedUsers = 0;
@@ -39,7 +38,7 @@ Server = (function() {
       _this.broadCast('status', _this.status);
 
       socket.on('newVote', function(index) {
-        if(answered) {
+        if(answered || index == null) {
           return false;
         }
         _this.currentPoll.answer(index);
@@ -95,7 +94,6 @@ Server = (function() {
 
     this.updateStatus(this.STATUS_POLL_ENDED);
     this.broadCast('results', this.currentPoll.getResults());
-
     setTimeout(function() {
       _this.updateStatus(_this.STATUS_NO_POLL);
     }, this.resetTimeout * 1000);
