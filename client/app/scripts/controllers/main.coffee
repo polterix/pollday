@@ -19,6 +19,7 @@ angular.module('polldayApp')
       $scope.mode = 'waiting'
 
     $scope.stop = () ->
+      $scope.role = 'user'
       Pldsocket.emit 'endPoll'
 
     $scope.vote = (index) ->
@@ -42,6 +43,7 @@ angular.module('polldayApp')
 
     Pldsocket.on 'results', (datas) ->
       if datas.length
-        $scope.results = datas
+        $scope.results = for id, count of datas
+          {'id':id, 'label': $scope.poll.choices[id], 'nbVotes':parseInt(count) || 0}
         $scope.mode = 'results'
   ]
