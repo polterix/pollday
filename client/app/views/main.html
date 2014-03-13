@@ -30,9 +30,9 @@
 <div ng-show="mode == 'normal'">
     <h2>{{ poll.title }}</h2>
     <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
-        <div class="radio" ng-repeat="choice in poll.choices">
-            <label class="icheck-box">
-                <input type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
+        <div class="radio icheck-box" ng-repeat="choice in poll.choices">
+            <label>
+                <input icheck type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
                 {{choice}} <small>{{ results[$index] }}</small>
             </label>
         </div>
@@ -58,3 +58,8 @@
         </ul>
     </div>
 </div>
+
+
+
+
+
