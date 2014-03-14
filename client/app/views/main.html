@@ -32,7 +32,7 @@
     <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
         <div class="radio icheck-box" ng-repeat="choice in poll.choices">
             <label>
-                <input icheck type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}">
+                <input icheck type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}" required>
                 {{choice}} <small>{{ results[$index] }}</small>
             </label>
         </div>
