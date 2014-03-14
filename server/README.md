@@ -12,7 +12,7 @@ Install latest stable NodeJS version
 sudo n stable
 ```
 
-Install the node package module
+Install the "node package module"
 ```bash
 npm install
 ```
