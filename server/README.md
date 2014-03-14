@@ -19,7 +19,7 @@ npm install
 
 Launch the server
 ```bash
-node bin/pollday p 9000
+node bin/pollday
 ```
 
 Copyright (c) 2014 . Licensed under the MIT license.
