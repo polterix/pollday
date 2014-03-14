@@ -1,25 +1,25 @@
-# pollday [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday-server.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
-
-_(Coming soon)_
+# pollday server [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday-server.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
 
 ## Getting Started
-Install the module with: `npm install pollday`
 
+It's recommanded to update your node
 ```bash
-pollday -p 9090
+sudo npm install -g n
 ```
 
-## Documentation
-_(Coming soon)_
+Install latest stable NodeJS version
+```bash
+sudo n stable
+```
 
-## Examples
-_(Coming soon)_
+Install the node package module
+```bash
+npm install
+```
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+Launch the server
+```bash
+node bin/pollday p 9000
+```
 
-## Release History
-_(Nothing yet)_
-
-## License
 Copyright (c) 2014 . Licensed under the MIT license.
