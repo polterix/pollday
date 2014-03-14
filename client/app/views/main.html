@@ -4,12 +4,12 @@
             <legend>Créer un sondage</legend>
             <div class="form-group">
                 <label for="title">Titre</label>
-                <input type="text" class="form-control input-lg" id="title"  ng-model="poll.title" size="30" placeholder="">
+                <input type="text" class="form-control input-lg" id="title" ng-model="poll.title" size="30" placeholder="">
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <label class="sr-only" for="newChoiceText">Ajouter un choix</label>
-                    <input type="text" class="form-control input-lg" id="newChoiceText" ng-model="choiceText" size="30" placeholder="Un nouveau choix">
+                    <input type="text" class="form-control input-lg" id="newChoiceText" ng-model="choiceText" size="30" placeholder="Un nouveau choix" required>
                     <span class="input-group-btn">
                         <input class="btn btn-default btn-lg" type="submit" value="Ajouter">
                     </span>
