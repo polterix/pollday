@@ -7,6 +7,9 @@ set :application, "pollday-server"
 set :default_stage, "dev"
 set :stages, %w(dev)
 
+set :shared_files,     []
+set :shared_children,  ["config"]
+
 ####################################################
 # Set the repository type and location to deploy from.
 
@@ -34,8 +37,7 @@ namespace :node do
     end
 end
 
-after "deploy:finalize_update" do
-  run "rm -rf #{release_path}/server/config"
+before "deploy:finalize_update" do
   run "mv #{release_path}/server/* #{release_path}"
 end
 
