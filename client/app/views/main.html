@@ -24,7 +24,7 @@
             </li>
         </ul>
     </div>
-    <button class="btn btn-success btn-lg btn-block" ng-click="start()">Commencer</button>
+    <button class="btn btn-success btn-lg btn-block" ng-show="poll.choices.length" ng-click="start()">Commencer</button>
 </div>
 
 <div ng-show="mode == 'normal'">
