@@ -1,8 +1,8 @@
-# pollday [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday-server.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
+# pollday server [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday-server.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
 
 ## Getting Started
 
-It's recommanded to update your node `sudo npm install -g n`
+It's recommanded to update your node
 ```bash
 sudo npm install -g n
 ```
