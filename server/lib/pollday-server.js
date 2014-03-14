@@ -37,6 +37,9 @@ Server = (function() {
       }
 
       _this.broadCast('status', _this.status);
+      if(_this.status === _this.STATUS_POLL_ENDED) {
+        _this.broadCast('results', _this.currentPoll.getResults());
+      }
 
       socket.on('newVote', function(index) {
         if(answered || index == null) {
