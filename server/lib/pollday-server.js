@@ -3,10 +3,11 @@
 var Server;
 
 Server = (function() {
-  function Server(port, resetTimeout) {
+  function Server(port, flashpolicyport, resetTimeout) {
     var _this;
     _this = this;
     this.resetTimeout = resetTimeout || 60;
+    this.flashpolicyport = flashpolicyport
     this.currentPoll = undefined;
     this.connectedUsers = 0;
     this.logger = console;
@@ -100,7 +101,9 @@ Server = (function() {
   }
 
   Server.prototype.createIOInstance = function(socketApp) {
-    var io = require('socket.io').listen(socketApp);
+    var io = require('socket.io').listen(socketApp, {
+      'flash policy port': this.flashpolicyport
+    });
 
     io.enable('browser client minification');
     io.enable('browser client gzip');

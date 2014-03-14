@@ -8,10 +8,11 @@ var cli = require('commander');
 
 cli
   .version('0.0.1')
-  .option('-p, --port', 'Listening port', 9091)
+  .option('-p, --port [value]', 'Listening port', 9091)
+  .option('-fp, --flashpolicyport [value]', 'Flash policy port', 10843)
   .option('-t, --timeout [value]', 'Reset timeout in seconds after the end of a poll')
   .parse(process.argv);
 
 var Server = require('../lib/pollday-server.js');
 
-var server = new Server(cli.port, cli.timeout);
+var server = new Server(cli.port, cli.flashpolicyport, cli.timeout);
