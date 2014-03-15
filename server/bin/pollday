@@ -15,4 +15,12 @@ cli
 
 var Server = require('../lib/pollday-server.js');
 
-var server = new Server(parseInt(cli.port), parseInt(cli.flashpolicyport), parseInt(cli.timeout));
+var options = {
+    'port':            parseInt(cli.port),
+    'flashpolicyport': parseInt(cli.flashpolicyport),
+    'timeout':         parseInt(cli.timeout)
+};
+
+var SocketFactory = require('../lib/socket-factory.js');
+
+var server = new Server(new SocketFactory(), options);

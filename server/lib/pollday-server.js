@@ -3,74 +3,108 @@
 var Server;
 
 Server = (function() {
-  function Server(port, flashpolicyport, resetTimeout) {
-    var _this;
-    _this = this;
-    this.resetTimeout = resetTimeout || 60;
-    this.flashpolicyport = flashpolicyport
+  function Server(socketFactory, options) {
+    var _this = this;
+
+    this.options = options || {};
+
+    this.options.port            = options.port || 80;
+    this.options.loglevel        = options.loglevel || 1;
+    this.options.flashpolicyport = options.flashpolicyport || 10843;
+    this.options.resetTimeout    = options.resetTimeout || 60;
+
     this.currentPoll = undefined;
+
     this.connectedUsers = 0;
-    this.logger = console;
     this.answererCount = 0;
+
+    this.logger = console;
 
     // Init status
     this.status = this.STATUS_NO_POLL
 
-    // Create server instance
-    this.socketApp = require('http').createServer();
-    this.socketApp.listen(port);
-
-    // Create socket io instance
-    this.io = this.createIOInstance(this.socketApp);
+    this.io = socketFactory.create({
+      'port'            : this.options.port,
+      'flashpolicyport' : this.options.flashpolicyport,
+      'loglevel'        : this.options.loglevel
+    });
 
     this.io.sockets.on('connection', function(socket) {
-      var role;
-      var answered = false;
+      _this.onConnection(socket);
+    });
+  }
 
-      role = 'user';
-      _this.connectedUsers++;
-      _this.broadCast('connectedUsers', _this.connectedUsers);
+  Server.prototype.onConnection = function (socket) {
 
-      if(_this.currentPoll) {
-        _this.broadCast('newPoll', _this.currentPoll);
-        _this.broadCast('answererCount', _this.currentPoll.answererCount);
+      socket.set('answered', false);
+      socket.set('role', 'user');
+
+      this.connectedUsers++;
+      this.broadCast('connectedUsers', this.connectedUsers);
+
+      if(this.currentPoll) {
+        this.broadCast('newPoll', this.currentPoll);
+        this.broadCast('answererCount', this.currentPoll.answererCount);
       }
 
-      _this.broadCast('status', _this.status);
-      if(_this.status === _this.STATUS_POLL_ENDED) {
-        _this.broadCast('results', _this.currentPoll.getResults());
+      this.broadCast('status', this.status);
+
+      if(this.status === this.STATUS_POLL_ENDED) {
+        this.broadCast('results', this.currentPoll.getResults());
       }
 
-      socket.on('newVote', function(index) {
-        if(answered || index == null) {
-          return false;
-        }
+      this.registerNewVoteHandler(socket);
+      this.registerEndPollHandler(socket);
+      this.registerNewPollHandler(socket);
+      this.registerDisconnectHandler(socket);
+  }
+
+  Server.prototype.registerNewVoteHandler = function (socket) {
+    var _this = this;
+    socket.on('newVote', function(index) {
+      if(index == null) {
+        return false;
+      }
+
+      socket.get('answered', function(value) {
         _this.currentPoll.answer(index);
-        answered = true;
+        socket.set('answered', true);
         _this.broadCast('answererCount', _this.currentPoll.answererCount);
       });
 
-      socket.on('endPoll', function(poll) {
-        _this.endCurrentPoll();
-      });
+    });
+  }
 
-      socket.on('newPoll', function(poll) {
-        _this.updateStatus(_this.STATUS_POLL_IN_PROGRESS);
-        role = 'admin';
-        var poll = _this.createNewPoll(poll.title, poll.choices);
-        _this.updateCurrentPoll(poll);
-      });
+  Server.prototype.registerEndPollHandler = function(socket) {
+    var _this = this;
+    socket.on('endPoll', function(poll) {
+      _this.endCurrentPoll();
+    });
+  }
 
-      return socket.on('disconnect', function() {
-        _this.connectedUsers--;
+  Server.prototype.registerNewPollHandler = function(socket) {
+    var _this = this;
+    socket.on('newPoll', function(poll) {
+      _this.updateStatus(_this.STATUS_POLL_IN_PROGRESS);
+      socket.set('role', 'admin');
+      var poll = _this.createNewPoll(poll.title, poll.choices);
+      _this.updateCurrentPoll(poll);
+    });
+  }
 
-        // if user is admin end current poll
+  Server.prototype.registerDisconnectHandler = function(socket) {
+    var _this = this;
+    socket.on('disconnect', function() {
+      _this.connectedUsers--;
+
+      // if user is admin end current poll
+      socket.get('role', function(role) {
         if(role == "admin") {
           _this.endCurrentPoll();
         }
-
-        return _this.broadCast('connectedUsers', _this.connectedUsers);
       });
+
+      _this.broadCast('connectedUsers', _this.connectedUsers);
     });
   }
 
@@ -100,28 +134,7 @@ Server = (function() {
     this.broadCast('results', this.currentPoll.getResults());
     setTimeout(function() {
       _this.updateStatus(_this.STATUS_NO_POLL);
-    }, this.resetTimeout * 1000);
-  }
-
-  Server.prototype.createIOInstance = function(socketApp) {
-    var io = require('socket.io').listen(socketApp, {
-      'flash policy port': this.flashpolicyport
-    });
-
-    io.enable('browser client minification');
-    io.enable('browser client gzip');
-    io.enable('browser client etag');
-
-    io.set('log level', 3);
-    io.set('transports', [
-      'websocket',
-      'flashsocket',
-      'htmlfile',
-      'xhr-polling',
-      'jsonp-polling'
-    ]);
-
-    return io;
+    }, this.options.resetTimeout * 1000);
   }
 
   Server.prototype.broadCast = function(channel, message) {
