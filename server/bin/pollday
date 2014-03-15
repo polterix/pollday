@@ -5,22 +5,21 @@
 process.title = 'pollday';
 
 var cli = require('commander');
+var Server = require('../lib/Server.js');
+var SocketFactory = require('../lib/SocketFactory.js');
 
 cli
   .version('0.0.1')
   .option('-p, --port <value>', 'Listening port', 9091)
   .option('-f, --flashpolicyport <value>', 'Flash policy port', 10843)
-  .option('-t, --timeout <value>', 'Reset timeout in seconds after the end of a poll')
+  .option('-t, --timeout <value>', 'Reset timeout in seconds after the end of a poll', 60)
   .parse(process.argv);
 
-var Server = require('../lib/pollday-server.js');
 
 var options = {
     'port':            parseInt(cli.port),
     'flashpolicyport': parseInt(cli.flashpolicyport),
     'timeout':         parseInt(cli.timeout)
 };
-
-var SocketFactory = require('../lib/socket-factory.js');
 
 var server = new Server(new SocketFactory(), options);
