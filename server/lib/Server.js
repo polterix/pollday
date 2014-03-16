@@ -2,16 +2,17 @@
 
 var Server;
 var Poll = require('./Poll.js');
+var User = require('./User.js');
 
 var _ = require('lodash');
 
 /**
- * Server
- *
- * @param socketFactory
- * @param options
- * @return
- */
+* Server
+*
+* @param socketFactory
+* @param options
+* @return
+*/
 var Server = function (socketFactory, options) {
   var _this = this;
 
@@ -41,7 +42,8 @@ var Server = function (socketFactory, options) {
   });
 
   this.io.sockets.on('connection', function(socket) {
-    _this.onConnection(socket);
+    var user = new User(socket);
+    _this.onConnection(user);
   });
 };
 
@@ -50,16 +52,15 @@ Server.prototype.STATUS_POLL_IN_PROGRESS = 2;
 Server.prototype.STATUS_POLL_ENDED       = 3;
 
 /**
- * onConnection
- *
- * @param socket
- * @return
- */
-Server.prototype.onConnection = function (socket) {
+* onConnection
+*
+* @param user
+* @return
+*/
+Server.prototype.onConnection = function (user) {
   var _this = this;
 
-  socket.set('answered', false);
-  socket.set('role', 'user');
+  user.set('role', 'user');
 
   this.connectedUsers++;
   this.broadCast('connectedUsers', this.connectedUsers);
@@ -79,9 +80,9 @@ Server.prototype.onConnection = function (socket) {
 
   // register events callbacks
   this.events.forEach(function(eventName) {
-    socket.on(eventName, function() {
+    user.socket.on(eventName, function() {
       var args = Array.prototype.slice.call(arguments);
-      args.unshift(socket);
+      args.unshift(user);
       _this['on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)].apply(_this, args);
     });
   });
@@ -89,59 +90,59 @@ Server.prototype.onConnection = function (socket) {
 };
 
 /**
- * onNewVote
- *
- * @param socket
- * @param answerIndex
- * @return
- */
-Server.prototype.onNewVote = function (socket, answerIndex) {
+* onNewVote
+*
+* @param user
+* @param answerIndex
+* @return
+*/
+Server.prototype.onNewVote = function (user, answerIndex) {
   // if answer index in null
   if(answerIndex == null) {
     return false;
   }
 
-  this.currentPoll.answer(socket, answerIndex);
+  this.currentPoll.answer(user, answerIndex);
 
   // broadcast new answererCount
   this.broadCast('answererCount', this.currentPoll.getAnswererCount());
 };
 
 /**
- * onEndPoll
- *
- * @return
- */
+* onEndPoll
+*
+* @return
+*/
 Server.prototype.onEndPoll = function() {
   this.endCurrentPoll();
 };
 
 /**
- * onNewPoll
- *
- * @param socket
- * @param pollDatas
- * @return
- */
-Server.prototype.onNewPoll = function(socket, pollDatas) {
+* onNewPoll
+*
+* @param user
+* @param pollDatas
+* @return
+*/
+Server.prototype.onNewPoll = function(user, pollDatas) {
   this.updateStatus(this.STATUS_POLL_IN_PROGRESS);
-  socket.set('role', 'admin');
-  var poll = new Poll(socket, pollDatas.title, pollDatas.choices);
+  user.set('role', 'admin');
+  var poll = new Poll(user, pollDatas.title, pollDatas.choices);
   this.updateCurrentPoll(poll);
 };
 
 /**
- * onDisconnect
- *
- * @param socket
- * @return
- */
-Server.prototype.onDisconnect = function(socket) {
+* onDisconnect
+*
+* @param user
+* @return
+*/
+Server.prototype.onDisconnect = function(user) {
   var _this = this;
   this.connectedUsers--;
 
   // if user is admin end current poll
-  socket.get('role', function(role) {
+  user.get('role', function(role) {
     if(role === "admin") {
       _this.endCurrentPoll();
     }
@@ -151,32 +152,32 @@ Server.prototype.onDisconnect = function(socket) {
 };
 
 /**
- * updateStatus
- *
- * @param status
- * @return
- */
+* updateStatus
+*
+* @param status
+* @return
+*/
 Server.prototype.updateStatus = function(status) {
   this.status = status;
   this.broadCast('status', this.status);
 };
 
 /**
- * updateCurrentPoll
- *
- * @param poll
- * @return
- */
+* updateCurrentPoll
+*
+* @param poll
+* @return
+*/
 Server.prototype.updateCurrentPoll = function(poll) {
   this.currentPoll = poll;
   this.broadCast('newPoll', poll.getDatas());
 };
 
 /**
- * endCurrentPoll
- *
- * @return
- */
+* endCurrentPoll
+*
+* @return
+*/
 Server.prototype.endCurrentPoll = function() {
   var _this = this;
   this.updateStatus(this.STATUS_POLL_ENDED);
@@ -187,21 +188,21 @@ Server.prototype.endCurrentPoll = function() {
 };
 
 /**
- * broadCast
- *
- * @param channel
- * @param message
- * @return
- */
+* broadCast
+*
+* @param channel
+* @param message
+* @return
+*/
 Server.prototype.broadCast = function(channel, message) {
   return this.io.sockets.emit(channel, message);
 };
 
 /**
- * shutdown
- *
- * @return
- */
+* shutdown
+*
+* @return
+*/
 Server.prototype.shutdown = function() {
   return this.io.sockets.clients().forEach(function(socket) {
     return socket.disconnect();
