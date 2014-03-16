@@ -25,9 +25,6 @@ var Poll = function(author, title, choices) {
  * @return
  */
 Poll.prototype.answer = function(user, choiceIndex) {
-  // add user to the voters collection
-  this.voters[user.id] = user;
-
   if(this.userHasAlreadyVoted(user)) {
     return this;
   }
@@ -37,6 +34,9 @@ Poll.prototype.answer = function(user, choiceIndex) {
   } else {
     this.results[choiceIndex] = 1;
   }
+
+  // add user to the voters collection
+  this.voters[user.id] = user;
 
   return this;
 };
@@ -59,7 +59,7 @@ Poll.prototype.getAnswererCount = function() {
  */
 Poll.prototype.userHasAlreadyVoted = function(user) {
   var userIds = Object.keys(this.voters);
-  return userIds.indexOf(user) !== -1;
+  return userIds.indexOf(user.id) !== -1;
 };
 
 /**

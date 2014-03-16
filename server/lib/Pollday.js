@@ -34,6 +34,8 @@ var Pollday = function(options) {
   };
 
   var server = new Server(io, server_options);
+
+  server.start();
 };
 
 module.exports = Pollday;

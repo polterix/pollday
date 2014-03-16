@@ -12,8 +12,6 @@ var User = require('./User.js');
  * @return
  */
 var Server = function (io, options) {
-  var _this = this;
-
   this.options = options;
   this.io = io;
 
@@ -27,6 +25,10 @@ var Server = function (io, options) {
   // Init status
   this.status = this.STATUS_NO_POLL;
 
+};
+
+Server.prototype.start = function () {
+  var _this = this;
   this.io.sockets.on('connection', function(socket) {
     var user = new User(socket);
 
