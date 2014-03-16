@@ -22,12 +22,24 @@ var Server = function (io, options) {
   this.answererCount = 0;
   this.logger = console;
 
+  this.userEventNames = ['newVote', 'endPoll', 'newPoll', 'disconnect'];
+
   // Init status
   this.status = this.STATUS_NO_POLL;
 
   this.io.sockets.on('connection', function(socket) {
     var user = new User(socket);
-    _this.onConnection(user);
+
+    _this.onConnection();
+
+    // register user events callbacks
+    _this.userEventNames.forEach(function(eventName) {
+      user.socket.on(eventName, function() {
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(user);
+        _this['on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)].apply(_this, args);
+      });
+    });
   });
 };
 
@@ -41,9 +53,7 @@ Server.prototype.STATUS_POLL_ENDED       = 3;
  * @param user
  * @return
  */
-Server.prototype.onConnection = function (user) {
-  var _this = this;
-
+Server.prototype.onConnection = function () {
   this.connectedUsers++;
   this.broadCast('connectedUsers', this.connectedUsers);
 
@@ -57,18 +67,6 @@ Server.prototype.onConnection = function (user) {
   if(this.status === this.STATUS_POLL_ENDED) {
     this.broadCast('results', this.currentPoll.getResults());
   }
-
-  this.events = ['newVote', 'endPoll', 'newPoll', 'disconnect'];
-
-  // register events callbacks
-  this.events.forEach(function(eventName) {
-    user.socket.on(eventName, function() {
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift(user);
-      _this['on' + eventName.charAt(0).toUpperCase() + eventName.slice(1)].apply(_this, args);
-    });
-  });
-
 };
 
 /**
@@ -119,12 +117,11 @@ Server.prototype.onNewPoll = function(user, pollDatas) {
  * @return
  */
 Server.prototype.onDisconnect = function(user) {
-  var _this = this;
   this.connectedUsers--;
 
   // if user is author of the current poll end it.
   if(this.currentPoll && this.currentPoll.author.id === user.id) {
-    _this.endCurrentPoll();
+    this.endCurrentPoll();
   }
 
   this.broadCast('connectedUsers', this.connectedUsers);
