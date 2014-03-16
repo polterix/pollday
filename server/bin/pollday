@@ -5,8 +5,7 @@
 process.title = 'pollday';
 
 var cli = require('commander');
-var Server = require('../lib/Server.js');
-var SocketFactory = require('../lib/SocketFactory.js');
+var Pollday = require('../lib/Pollday.js');
 
 cli
   .version('0.0.1')
@@ -22,4 +21,4 @@ var options = {
     'timeout':         parseInt(cli.timeout)
 };
 
-var server = new Server(new SocketFactory(), options);
+var pollday = new Pollday(options);

@@ -1,6 +1,6 @@
 'use strict';
 
-var polldayServer = require('../lib/pollday-server.js');
+var polldayServer = require('../lib/Server.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

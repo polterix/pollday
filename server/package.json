@@ -1,7 +1,7 @@
 {
   "name": "pollday-server",
   "version": "0.0.0",
-  "main": "lib/pollday-server.js",
+  "main": "lib/pollday.js",
   "description": "Pollday",
   "homepage": "https://github.com/LaNetscouade/pollday",
   "bugs": "https://github.com/LaNetscouade/pollday/issues",
