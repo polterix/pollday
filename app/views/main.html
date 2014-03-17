@@ -1,3 +1,6 @@
+<div ng-show="mode == 'init'">
+    <button class="btn btn-success btn-lg btn-block" ng-click="init()">Créer un sondage</button>
+</div>
 <div ng-show="mode == 'edit'">
     <form class="form create-form" role="form" ng-submit="addChoice()">
         <fieldset>

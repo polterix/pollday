@@ -6,6 +6,10 @@ angular.module('polldayApp')
     $scope.poll = new Poll()
     $scope.role = 'user'
 
+    $scope.init = () ->
+      $scope.role = 'admin'
+      $scope.mode = 'edit'
+
     $scope.addChoice = () ->
       $scope.poll.addChoice($scope.choiceText)
       $scope.choiceText = ''
@@ -39,6 +43,7 @@ angular.module('polldayApp')
 
     Pldsocket.on 'status', (datas) ->
       switch datas
+        when 0 then $scope.mode = 'init'
         when 1 then $scope.mode = 'edit'
         when 2 then $scope.mode = 'normal'
         when 3 then $scope.mode = 'results'
