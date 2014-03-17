@@ -1,4 +1,4 @@
-# pollday client
+# pollday client [![Build Status](https://travis-ci.org/LaNetscouade/pollday.png?branch=client)](https://travis-ci.org/LaNetscouade/pollday)
 
 ## Getting Started
 
