@@ -50,6 +50,26 @@
 
     });
 
+    describe('#onConnection', function () {
+      it('on connection user must receive current datas', function() {
+        var emitStub = sinon.stub();
+        var broadCastStub = sinon.stub(server, 'broadCast');
+
+        var user3 = {
+            'socket' : {
+                'emit' : emitStub
+            }
+        };
+
+        server.onConnection(user3);
+
+        assert.equal(emitStub.called, true);
+        assert.equal(broadCastStub.called, true);
+
+        server.broadCast.restore();
+      });
+    });
+
     describe('#onDisconnect', function () {
       it('if poll author disconnect currentPoll should be ended', function() {
         sinon.stub(server, 'broadCast');
@@ -71,6 +91,21 @@
 
         server.broadCast.restore();
         server.endCurrentPoll.restore();
+      });
+
+      it('on user disconnect new connected user number should be broadcasted', function() {
+        var stub = sinon.stub(server, 'broadCast');
+
+        server.connectedUsers = 1;
+
+        server.onDisconnect(user2);
+
+        // should broadcast new status
+        assert.equal(stub.args[0][0], 'connectedUsers');
+        assert.equal(stub.args[0][1], 0);
+
+
+        server.broadCast.restore();
       });
 
     });
