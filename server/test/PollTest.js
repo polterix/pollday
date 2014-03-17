@@ -22,7 +22,7 @@ var Poll = require('../lib/Poll.js');
     test.ifError(value)
 */
 
-exports.Poll = {
+exports.PollTest = {
   setUp: function(done) {
     var user = {
       'id': 'id1'
@@ -44,10 +44,10 @@ exports.Poll = {
       'id' : 'id1'
     };
 
-    this.poll.answer(answerer, 1);
+    this.poll.answer(answerer1, 1);
     test.equal(this.poll.results[1], 1, 'user answer is saved');
 
-    this.poll.answer(answerer, 1);
+    this.poll.answer(answerer1, 1);
     test.equal(this.poll.results[1], 1, 'user can\'t answer multiple times');
 
     test.done();
