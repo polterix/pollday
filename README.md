@@ -12,7 +12,7 @@ Install latest stable NodeJS version
 sudo n stable
 ```
 
-Install the "node package module"
+Install "node package module" dependencies
 ```bash
 npm install
 ```
@@ -20,6 +20,20 @@ npm install
 Launch the server
 ```bash
 node bin/pollday
+```
+
+```
+node bin/pollday --help
+
+Usage: pollday [options]
+
+  Options:
+
+    -h, --help                     output usage information
+    -V, --version                  output the version number
+    -p, --port <value>             Listening port
+    -f, --flashpolicyport <value>  Flash policy port
+    -t, --timeout <value>          Reset timeout in seconds after the end of a poll
 ```
 
 Copyright (c) 2014 . Licensed under the MIT license.
