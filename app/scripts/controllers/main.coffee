@@ -34,6 +34,8 @@ angular.module('polldayApp')
 
     Pldsocket.on 'newPoll', (datas) ->
       $scope.poll = new Poll(datas.title, datas.choices)
+      $scope.ranking = []
+      $scope.answererCount = 0
 
     Pldsocket.on 'status', (datas) ->
       switch datas
