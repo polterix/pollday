@@ -14,15 +14,25 @@
     var server = new Server(io);
 
     var user1 = { 'id' : 'id1' };
+    var user2 = { 'id' : 'id2' };
+
+    var pollDatas = {
+      'title' : 'New poll',
+      'choices' : ['one', 'two', 'three']
+    };
 
     describe('#onNewPoll', function () {
+
+      it('should update current poll', function () {
+        sinon.stub(server, 'broadCast');
+        server.onNewPoll(user1, pollDatas);
+        assert.equal(server.currentPoll.title, pollDatas.title);
+        assert.equal(server.currentPoll.choices, pollDatas.choices);
+        server.broadCast.restore();
+      });
+
       it('should broadcast new poll and update status', function () {
         var stub = sinon.stub(server, 'broadCast');
-
-        var pollDatas = {
-          'title' : 'New poll',
-          'choices' : ['one', 'two', 'three']
-        };
 
         server.onNewPoll(user1, pollDatas);
 
@@ -36,6 +46,31 @@
         assert.equal(stub.args[1][0], 'newPoll');
 
         server.broadCast.restore();
+      });
+
+    });
+
+    describe('#onDisconnect', function () {
+      it('if poll author disconnect currentPoll should be ended', function() {
+        sinon.stub(server, 'broadCast');
+        var endCurrentPollStub = sinon.stub(server, 'endCurrentPoll');
+
+        server.currentPoll = {
+          'author'  : user1,
+          'title'   : pollDatas.title,
+          'choices' : pollDatas.choices,
+        };
+
+        // user2 is not the current poll author so 'endCurrentPoll' must not be called
+        server.onDisconnect(user2);
+        assert.equal(endCurrentPollStub.notCalled, true);
+
+        // user1 is the current poll author so'endCurrentPoll' must be called
+        server.onDisconnect(user1);
+        assert.equal(endCurrentPollStub.calledOnce, true);
+
+        server.broadCast.restore();
+        server.endCurrentPoll.restore();
       });
 
     });
