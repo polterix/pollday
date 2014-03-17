@@ -1,4 +1,4 @@
-# pollday server [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday-server.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
+# pollday server [![Build Status](https://secure.travis-ci.org/LaNetscouade/pollday.png?branch=master)](http://travis-ci.org/LaNetscouade/pollday)
 
 ## Getting Started
 
