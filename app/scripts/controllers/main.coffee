@@ -9,6 +9,7 @@ angular.module('polldayApp')
     $scope.init = () ->
       $scope.role = 'admin'
       $scope.mode = 'edit'
+      Pldsocket.emit 'initPoll'
 
     $scope.addChoice = () ->
       $scope.poll.addChoice($scope.choiceText)
