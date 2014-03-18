@@ -16,12 +16,11 @@ set :shared_children,  ["config"]
 # GITHUB
 set :scm, :git
 set :repository, "git@github.com:LaNetscouade/pollday.git"
-set(:branch_prompt) { Capistrano::CLI.ui.ask("Branche ou tag à déployer [master]: ") }
-set(:branch) { (branch_prompt == "") ? "master" : "#{branch_prompt}" }
+set :branch, "master"
 set :repository_cache, "git_cache"
 set :ssh_options, { :forward_agent => true }
 set :deploy_via, :remote_cache
-set :copy_exclude, [ '.git', 'client' ]
+set :copy_exclude, [ '.git', 'config' ]
 
 # Generally don't need sudo for this deploy setup
 set :use_sudo, false
@@ -33,13 +32,15 @@ default_run_options[:pty] = true
 namespace :node do
     desc "Check required packages and install if packages are not installed"
     task :install_packages do
-        run "cd #{release_path}/server && npm install --loglevel warn"
+        run "cd #{release_path} && npm install --loglevel warn"
     end
 end
 
-before "deploy:finalize_update" do
-  run "mv #{release_path}/server/* #{release_path}"
+namespace :pollday do
+    task :restart do
+        run "pkill -f pollday"
+    end
 end
 
-after "deploy:finalize_update", "node:install_packages"
+after "deploy:finalize_update", "node:install_packages", "pollday:restart"
 
