@@ -13,8 +13,8 @@
     var io = {};
     var server = new Server(io);
 
-    var user1 = { 'id' : 'id1', 'get': function(){}};
-    var user2 = { 'id' : 'id2', 'get': function(){}};
+    var user1 = { 'id' : 'id1'};
+    var user2 = { 'id' : 'id2'};
 
     var pollDatas = {
       'title' : 'New poll',
@@ -112,15 +112,10 @@
       it('when an author disconnect status should be updated to STATUS_INIT_POLL and broadcasted', function() {
         var stub = sinon.stub(server, 'broadCast');
 
-        var user3 = {
-          'id': 'id3',
-          'get': function() {},
-          'set': function() {}
-        };
+        var user3 = {'id': 'id3'};
 
-        // user get function return author in callback function
-        sinon.stub(user3, 'get').callsArgWith(1, null, 'author');
-
+        server.currentPoll.author = user3;
+        server.status = server.STATUS_CREATE_POLL;
         server.onDisconnect(user3);
 
         // should broadcast new status
