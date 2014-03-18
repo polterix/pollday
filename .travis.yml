@@ -4,3 +4,5 @@ node_js:
   - '0.8'
 before_script:
   - npm install -g grunt-cli
+notifications:
+  slack: lns:sFXL6hgPZlstgLWlQIEY7WMG
