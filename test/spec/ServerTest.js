@@ -119,7 +119,7 @@
         };
 
         // user get function return author in callback function
-        sinon.stub(user3, 'get').callsArgWith(1, 'author');
+        sinon.stub(user3, 'get').callsArgWith(1, null, 'author');
 
         server.onDisconnect(user3);
 
