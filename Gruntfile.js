@@ -133,7 +133,7 @@ module.exports = function (grunt) {
       }
     },
 
-    
+
     // Compiles CoffeeScript to JavaScript
     coffee: {
       options: {
@@ -160,7 +160,7 @@ module.exports = function (grunt) {
       }
     },
 
-    
+
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
