@@ -36,17 +36,39 @@
 </div>
 
 <div ng-show="mode == 'normal'">
-    <h2>{{ poll.title }}</h2>
+    <div class="clearfix live-sondage-info">
+        <div class="panel pull-left">
+          <div class="panel-heading">
+            <h4 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> Vote(s)</h4>
+          </div>
+          <div class="panel-body">
+            <div>{{ answererCount }}</div>
+          </div>
+        </div>
+        <div class="panel pull-left">
+          <div class="panel-heading">
+            <h4 class="panel-title"><span class="glyphicon glyphicon-user"></span> Connectés</h4>
+          </div>
+          <div class="panel-body">
+            <div>{{ connectedUsers }}</div>
+          </div>
+        </div>
+    </div>
+    
     <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
-        <div class="radio icheck-box" ng-repeat="choice in poll.choices">
+        <h2>Participer au sondage : {{ poll.title }}</h2>
+        <div class="icheck-radio-box" ng-repeat="choice in poll.choices">
             <label>
                 <input icheck type="radio" name="answerIndex" ng-model="$parent.answerIndex" ng-value="{{ $index }}" required>
-                {{choice}} <small>{{ results[$index] }}</small>
+                <span class="label-txt">{{choice}}</span> <small>{{ results[$index] }}</small>
             </label>
         </div>
-        <button class="btn btn-primary btn-lg btn-block">Voter</button>
+        <div class="btn-box clearfix">
+            <button class="btn btn-success btn-lg btn-block">Voter</button>
+        </div>
     </form>
     <div ng-show="(poll.answered || role == 'admin')">
+        <h3>Veuillez patienter, les résultats vont s'afficher dans un instant...</h3>
         Progression :
         <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
         {{ answererCount }} <span class="glyphicon glyphicon-bullhorn"></span> / {{ connectedUsers }} <span class="glyphicon glyphicon-user"></span>
@@ -55,13 +77,14 @@
 </div>
 
 <div ng-show="mode == 'results'">
-    <h2>{{ poll.title }}</h2>
-    <h3>Résultats</h3>
+    <h2>Résultats du sondage : {{ poll.title }}</h2>
     <div>
-        <ul>
+        <ul class="results-list">
             <li ng-repeat="result in ranking | orderBy:'-nbVotes':false">
-                <span>{{ $index+1 }}</span> <span>{{ result.label }}</span> <small>({{(100*result.nbVotes/answererCount)| number:0}}%)</small>
-                <div progressbar progressmax="answererCount" progressvalue="result.nbVotes"></div>
+                <span class="label-txt">{{ $index+1 }} - {{ result.label }} <small>({{ result.nbVotes }} vote(s))</small></span>
+                <div progressbar progressmax="answererCount" progressvalue="result.nbVotes">
+                    {{(100*result.nbVotes/answererCount)| number:0}}%
+                </div>
             </li>
         </ul>
     </div>

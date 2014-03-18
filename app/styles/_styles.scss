@@ -141,12 +141,81 @@ legend {
     }
 }
 
-.icheck-box {
+.icheck-radio-box {
     @include clearfix();
     padding: 0;
+    float: left;
+    margin: 0 15px 15px 0;
     label {
         display: block;
-        padding: 5px;
+        
+        position: relative;
+        font-weight: normal;
+        cursor: pointer;
+        overflow: hidden;
+        @include font-size (1.6);
+        @include border-radius(5px);
+        .iradio_minimal {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            @include gradient-vertical(#92d3e0,#92d3e0);
+            z-index: -1;
+            
+            &.hover,
+            &.checked {
+                @include gradient-vertical(#DFF0D8,#b1e49c);
+            }
+        }
+        .label-txt {
+            display: block;
+            padding: 20px;
+        }
+    }
+}
+
+.live-sondage-info {
+    .panel {
+       margin-right: 20px;
+       border: solid 1px #2A2C39;
+    }
+    .panel-body {
+        text-align: center;
+        @include font-size (3.2);
+        padding: 0;
+    }
+}
+
+.btn-box {
+    clear: both;
+    padding: 25px 0;
+}
+
+//  Result
+// ---------------------------
+
+.results-list {
+    li {
+        list-style: none;
+        background-color: #F4F4F4;
+        padding: 25px;
+        margin-bottom: 20px;
+        .progress-bar {
+            background-color: #b1e49c;
+            padding: 5px 0;
+        }
+        .progress {
+            height: 40px;
+            margin: 0;
+            background-color: $white;
+        }
+        .label-txt {
+            display: block;
+            margin-bottom: 5px;
+            @include font-size(1.6); 
+        }
     }
 }
 
