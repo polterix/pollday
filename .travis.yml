@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-  - '0.8'
   - '0.10'
 before_script:
   - 'gem update --system'
@@ -8,3 +7,5 @@ before_script:
   - 'gem install compass'
   - 'npm install -g bower grunt-cli'
   - 'bower install'
+notifications:
+  slack: lns:sFXL6hgPZlstgLWlQIEY7WMG
