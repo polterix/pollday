@@ -44,3 +44,30 @@ describe 'Controller: MainCtrl', () ->
 
     Pldsocket.emit('status', 3)
     expect(scope.mode).to.equal 'results'
+
+  it 'user cannot vote many times', () ->
+    spy = sinon.spy(Pldsocket, "emit");
+
+    # user vote choice 0
+    scope.vote(0);
+
+    # check Pldsocket.emit function is called
+    expect(spy.calledOnce).to.equal(true);
+
+    # user vote choice 1
+    scope.vote(1);
+
+    # check Pldsocket.emit function not called again
+    expect(spy.calledTwice).to.not.equal(true);
+
+  it 'if a user already voted and a new poll event is received the user can vote again', () ->
+
+    # user has already voted
+    localStorage.setItem('voted', true)
+
+    # a new poll event is received
+    Pldsocket.emit('newPoll', pollDatas)
+
+    # user can vote again
+    expect(localStorage.getItem('voted')).to.not.equal(true)
+
