@@ -39,6 +39,11 @@ angular.module('polldayApp')
       Pldsocket.emit 'initPoll'
 
     $scope.addChoice = () ->
+
+      # prevent duplicate choices
+      if $scope.poll.choices.indexOf($scope.choiceText) != -1
+        return false
+
       $scope.poll.addChoice($scope.choiceText)
       $scope.choiceText = ''
 

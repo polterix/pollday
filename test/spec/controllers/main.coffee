@@ -45,6 +45,7 @@ describe 'Controller: MainCtrl', () ->
     Pldsocket.emit('status', 3)
     expect(scope.mode).to.equal 'results'
 
+<<<<<<< HEAD
   it 'user cannot vote many times', () ->
     spy = sinon.spy(Pldsocket, "emit");
 
@@ -70,4 +71,21 @@ describe 'Controller: MainCtrl', () ->
 
     # user can vote again
     expect(localStorage.getItem('voted')).to.not.equal(true)
+
+  it 'should update user role when user init a new poll and emit initPoll message', () ->
+    socketEmitSpy = sinon.spy(Pldsocket, 'emit')
+
+    scope.role = "user"
+    scope.init()
+
+    expect(scope.role).to.equal 'admin'
+    expect(socketEmitSpy.calledWith('initPoll')).to.equal true
+
+  it 'should prevent duplicate choices', () ->
+    scope.poll.choices = ['one', 'two']
+
+    scope.choiceText = 'one'
+    scope.addChoice()
+
+    expect(scope.poll.choices).to.eql(['one', 'two'])
 
