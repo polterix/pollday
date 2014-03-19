@@ -135,6 +135,7 @@
     describe('#onEndPoll', function () {
 
       it('should call endCurrentPoll only if the user is the poll author', function () {
+
         server.currentPoll = {
           'author'  : user1,
           'title'   : pollDatas.title,
@@ -143,13 +144,16 @@
 
         var endCurrentPollSpy = sinon.stub(server, 'endCurrentPoll');
 
+        // if user is not the author
         server.onEndPoll(user2);
         assert.equal(endCurrentPollSpy.notCalled, true);
 
+        // if user is the author
         server.onEndPoll(user1);
         assert.equal(endCurrentPollSpy.calledOnce, true);
 
         server.endCurrentPoll.restore();
+
       });
 
     });
