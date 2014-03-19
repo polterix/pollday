@@ -45,7 +45,6 @@ describe 'Controller: MainCtrl', () ->
     Pldsocket.emit('status', 3)
     expect(scope.mode).to.equal 'results'
 
-<<<<<<< HEAD
   it 'user cannot vote many times', () ->
     spy = sinon.spy(Pldsocket, "emit");
 
