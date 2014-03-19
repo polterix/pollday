@@ -45,6 +45,10 @@
         // should broadcast new poll
         assert.equal(stub.args[1][0], 'newPoll');
 
+        // check author id is sended
+        var submitedPollDatas = stub.args[1][1];
+        assert.equal(submitedPollDatas.authorId, user1.id);
+
         server.broadCast.restore();
       });
 
@@ -56,9 +60,9 @@
         var broadCastStub = sinon.stub(server, 'broadCast');
 
         var user3 = {
-            'socket' : {
-                'emit' : emitStub
-            }
+          'socket' : {
+            'emit' : emitStub
+          }
         };
 
         server.onConnection(user3);
@@ -128,5 +132,28 @@
 
     });
 
+    describe('#onEndPoll', function () {
+
+      it('should call endCurrentPoll only if the user is the poll author', function () {
+        server.currentPoll = {
+          'author'  : user1,
+          'title'   : pollDatas.title,
+          'choices' : pollDatas.choices,
+        };
+
+        var endCurrentPollSpy = sinon.stub(server, 'endCurrentPoll');
+
+        server.onEndPoll(user2);
+        assert.equal(endCurrentPollSpy.notCalled, true);
+
+        server.onEndPoll(user1);
+        assert.equal(endCurrentPollSpy.calledOnce, true);
+
+        server.endCurrentPoll.restore();
+      });
+
+    });
+
   });
+
 })();
