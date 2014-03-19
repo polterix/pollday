@@ -182,12 +182,12 @@ form h2 {
             }
             &:before {
                 background-color: $white;
-                width: 14px;
-                height: 14px;
-                left: 13px;
-                top: 23px;
+                width: 10px;
+                height: 10px;
+                left: 15px;
+                top: 25px;
                 z-index: 10;
-                border: none;
+                border-color: transparent;
             }
             &.hover,
             &.checked {
@@ -283,6 +283,19 @@ form h2 {
     }
 }
 
+.admin-progress {
+    padding: 25px;
+    .progress-bar {
+        background-color: #16a085;
+        padding: 5px 0;
+    }
+    .progress {
+        height: 40px;
+        margin: 0;
+        background-color: #ecf0f1;
+    }
+}
+
 //  Main
 // ---------------------------
 
@@ -303,6 +316,10 @@ form h2 {
     }
 }
 
+.waitting-msg {
+    text-align: center;
+}
+
 
 //  Footer
 // ---------------------------
@@ -311,11 +328,11 @@ form h2 {
     padding: 15px 0;
     text-align: center;
     @include font-size(1.2);
-    color: $white;
+    color: $grey88;
     position: absolute;
     width: 100%;
     bottom: 0;
-    background-color: #7CB0C3;
+    background-color: #ecf0f1;
 }
 
 
