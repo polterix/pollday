@@ -6,6 +6,7 @@
         <form class="form create-form" role="form" ng-submit="addChoice()">
             <fieldset>
                 <legend>Créer un sondage</legend>
+
                 <div class="form-group">
                     <label for="title">Titre</label>
                     <input type="text" class="form-control input-lg" id="title" ng-model="poll.title" size="30" placeholder="">
@@ -36,21 +37,21 @@
 </div>
 
 <div ng-show="mode == 'normal'">
-    <div class="clearfix live-sondage-info">
-        <div class="panel pull-left">
-          <div class="panel-heading">
-            <h4 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> Vote(s)</h4>
+    <div ng-class="{true:'answering', false:''}[(role == 'user' && !poll.answered)]" class="clearfix live-sondage-info">
+        <div class="panel-box">
+          <div class="panel-box-header">
+            <span class="glyphicon glyphicon-list-alt"></span> Vote(s)
           </div>
-          <div class="panel-body">
-            <div>{{ answererCount }}</div>
+          <div class="panel-box-body">
+            {{ answererCount }}2
           </div>
         </div>
-        <div class="panel pull-left">
-          <div class="panel-heading">
-            <h4 class="panel-title"><span class="glyphicon glyphicon-user"></span> Connectés</h4>
+        <div class="panel-box">
+          <div class="panel-box-header">
+            <span class="glyphicon glyphicon-user"></span> Connectés
           </div>
-          <div class="panel-body">
-            <div>{{ connectedUsers }}</div>
+          <div class="panel-box-body">
+            {{ connectedUsers }}
           </div>
         </div>
     </div>
@@ -68,10 +69,21 @@
         </div>
     </form>
     <div ng-show="(poll.answered || role == 'admin')">
-        <h3>Veuillez patienter, les résultats vont s'afficher dans un instant...</h3>
-        Progression :
-        <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
-        {{ answererCount }} <span class="glyphicon glyphicon-bullhorn"></span> / {{ connectedUsers }} <span class="glyphicon glyphicon-user"></span>
+        <div class="answered-box">
+            <h3>
+                Les résultats vont s'affciher dans quelque instant...
+                <div class="box">
+                <div class="clock"></div>
+            </div>
+            </h3>
+            
+        </div>
+
+        <div ng-show="(role == 'admin')">
+            Progression :
+            <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
+            {{ answererCount }} <span class="glyphicon glyphicon-bullhorn"></span> / {{ connectedUsers }} <span class="glyphicon glyphicon-user"></span>
+        </div>
     </div>
     <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
 </div>
