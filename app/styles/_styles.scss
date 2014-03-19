@@ -59,6 +59,14 @@ a:hover {
             color: $redLNS;
         }
     }
+
+    &.btn-pollday {
+        background-color: $lightBlue;
+        border-color: $lightBlue;
+        &:hover {
+            background-color: #2F88A7;
+        }
+    }
 }
 
 ul {
@@ -218,11 +226,12 @@ form h2 {
 
 .live-sondage-info {
     text-align: center;
+    margin-bottom: 20px;
     .panel-box {
         margin-right: 20px;
         border: solid 2px $purple;
         text-align: center;
-        @include border-radius(100px);
+        @include border-radius(32px);
         min-width: 150px;
         overflow: hidden;
         display: inline-block;
@@ -234,7 +243,7 @@ form h2 {
         .panel-box-body {
             padding: 0px 30px;
             @include font-size(7);
-            color: #9b59b6;
+            color: #8e44ad;
         }
     }
     &.answering {
@@ -266,6 +275,7 @@ form h2 {
         padding: 25px;
         margin-bottom: 20px;
         border-bottom: 2px solid #95a5a6;
+        position: relative;
         .progress-bar {
             background-color: #16a085;
             padding: 5px 0;
@@ -279,6 +289,35 @@ form h2 {
             display: block;
             margin-bottom: 5px;
             @include font-size(1.6); 
+        }
+        .picto {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: $white;
+            z-index: 100;
+            @include font-size(2.5);        
+        }
+        &:first-child {
+            .picto {
+                color: #f39c12;
+                @include font-size(3.2);
+            }
+        }
+        &:nth-child(2) {
+            .picto {
+                color: #bdc3c7;
+                @include font-size(2.5);
+            }
+        }
+        &:nth-child(3) {
+            .picto {
+                color: #d35400;
+                @include font-size(1.8);
+            }
+        }
+        &:last-child {
+            border:none;
         }
     }
 }
@@ -464,6 +503,26 @@ form h2 {
         padding: 10px 0;
         h1 {
             font: 800 24px "Open Sans";
+        }
+    }
+
+    form h2 {
+        @include font-size(1.8);
+    }
+}
+
+@media (max-width: 320px) {
+    .live-sondage-info {
+        .panel-box {
+            @include border-radius(10px);
+            min-width: 100px;
+            .panel-box-header {
+                padding: 5px 10px;
+            }
+            .panel-box-body {
+                padding: 0px 30px;
+                @include font-size(3);
+            }
         }
     }
 }

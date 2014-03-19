@@ -1,5 +1,5 @@
 <div ng-show="mode == 'init'">
-    <button class="btn btn-success btn-lg btn-block" ng-click="init()">Créer un sondage</button>
+    <button class="btn btn-pollday btn-success btn-lg btn-block" ng-click="init()">Créer un sondage</button>
 </div>
 <div ng-show="mode == 'edit'">
     <div ng-show="role == 'admin'">
@@ -29,7 +29,7 @@
                 </li>
             </ul>
         </div>
-        <button class="btn btn-success btn-lg btn-block" ng-show="poll.choices.length" ng-click="start()">Commencer</button>
+        <button class="btn btn-pollday btn-success btn-lg btn-block" ng-show="poll.choices.length" ng-click="start()">Commencer</button>
     </div>
     <div class="waitting-msg" ng-show="role == 'user'">
         <div class="box">
@@ -72,7 +72,7 @@
             </label>
         </div>
         <div class="btn-box clearfix">
-            <button class="btn btn-success btn-lg btn-block">Voter</button>
+            <button class="btn btn-pollday btn-success btn-lg btn-block">Voter</button>
         </div>
     </form>
     <div ng-show="(poll.answered || role == 'admin')">
@@ -102,6 +102,7 @@
                 <div progressbar progressmax="answererCount" progressvalue="result.nbVotes">
                     {{(100*result.nbVotes/answererCount)| number:0}}%
                 </div>
+                <span class="picto glyphicon glyphicon-star"></span>
             </li>
         </ul>
     </div>
