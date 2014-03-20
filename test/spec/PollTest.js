@@ -1,4 +1,5 @@
 /* global describe, it, beforeEach */
+/* jshint expr:true */
 
 (function () {
   'use strict';
@@ -29,14 +30,27 @@
 
     describe('#answer', function () {
       var answerer1 = { 'id' : 'id1' };
+      var answerer2 = { 'id' : 'id2' };
 
-      it('user answer is saved', function () {
-        poll.answer(answerer1, 1);
+      it('should save user answer', function () {
+        var returnedValue = poll.answer(answerer2, 1);
         expect(poll.results[1]).to.equal(1);
+        expect(returnedValue).to.be.true;
       });
-      it('user can\'t answer multiple times', function () {
-        poll.answer(answerer1, 1);
-        expect(poll.results[1]).to.equal(1);
+      it('should accept only one vote by user', function () {
+        // first answer
+        poll.answer(answerer2, 1);
+        // second answer
+        var returnedValue = poll.answer(answerer2, 1);
+        expect(returnedValue).to.be.false;
+      });
+      it('should reject author vote', function () {
+        var returnedValue = poll.answer(answerer1, 1);
+        expect(returnedValue).to.be.false;
+      });
+      it('should reject user answer if answerIndex is invalid', function () {
+        var returnedValue = poll.answer(answerer2, 5);
+        expect(returnedValue).to.be.false;
       });
     });
 

@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, beforeEach, afterEach */
 
 (function () {
   'use strict';
@@ -7,6 +7,7 @@
   var sinon = require('sinon');
   var assert = chai.assert;
   var Server = require('../../lib/Server.js');
+  var Poll = require('../../lib/Poll.js');
 
   describe('Server', function () {
 
@@ -55,7 +56,8 @@
     });
 
     describe('#onConnection', function () {
-      it('on connection user must receive current datas', function() {
+
+      it('should send current datas to the new connected user', function() {
         var emitStub = sinon.stub();
         var broadCastStub = sinon.stub(server, 'broadCast');
 
@@ -72,12 +74,72 @@
 
         server.broadCast.restore();
       });
+
+      it('should emit current poll results if status is STATUS_POLL_ENDED', function() {
+
+        sinon.stub(server, 'broadCast');
+
+        server.status = server.STATUS_POLL_ENDED;
+
+        var emitStub = sinon.stub();
+
+        var pollResults = [0, 1, 2];
+
+        server.currentPoll = new Poll(user1, pollDatas.title, pollDatas.choices);
+        server.results = pollResults;
+
+        var user3 = {
+          'socket' : {
+            'emit' : emitStub
+          }
+        };
+
+        server.onConnection(user3);
+
+        emitStub.calledWith('results', pollResults);
+
+        server.broadCast.restore();
+
+      });
+    });
+
+    describe('#onInitPoll', function () {
+      it('should change status to … and send confirmation to user', function() {
+        var broadCastStub = sinon.stub(server, 'broadCast');
+        var callback = sinon.stub();
+
+        // init status
+        server.status = server.STATUS_INIT_POLL;
+
+        server.onInitPoll(user1, null, callback);
+
+        // check status broadcast
+        assert.equal(broadCastStub.calledWith('status', server.STATUS_CREATE_POLL), true);
+
+        // check user reveive positive confirmation
+        assert.equal(callback.calledWith(true), true);
+
+        // re-init callback
+        callback = sinon.stub();
+
+        // if another user try to init a poll
+        server.onInitPoll(user2, null, callback);
+
+        // check this user receive a negative confirmation
+        assert.equal(callback.calledWith(false), true);
+
+        server.broadCast.restore();
+      });
     });
 
     describe('#onDisconnect', function () {
       it('if poll author disconnect currentPoll should be ended', function() {
+
         sinon.stub(server, 'broadCast');
         var endCurrentPollStub = sinon.stub(server, 'endCurrentPoll');
+
+        // init status
+        server.status = server.STATUS_POLL_IN_PROGRESS;
 
         server.currentPoll = {
           'author'  : user1,
@@ -128,6 +190,33 @@
 
 
         server.broadCast.restore();
+      });
+
+    });
+
+    describe('#onNewVote', function () {
+
+      beforeEach(function() {
+        server.status = server.STATUS_POLL_IN_PROGRESS;
+        server.currentPoll = new Poll(user1, pollDatas.title, pollDatas.choices);
+        sinon.stub(server, 'broadCast');
+      });
+
+      afterEach(function() {
+        server.broadCast.restore();
+      });
+
+      it('should register new vote', function () {
+        var pollAnswerStub = sinon.stub(server.currentPoll, 'answer');
+        var callback = sinon.stub().returns(false);
+
+        server.onNewVote(user2, 1, callback);
+
+        // check vote has been registered
+        assert.isTrue(pollAnswerStub.calledWith(user2, 1));
+
+        // check callback call
+        assert.isTrue(callback.calledWith(false));
       });
 
     });
