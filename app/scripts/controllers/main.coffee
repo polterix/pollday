@@ -27,16 +27,17 @@ angular.module('polldayApp')
           if localStorage.getItem("authorId") == $scope.authorId
             $scope.poll.answered = true 
         when 3 then $scope.mode = 'results'
-        
+
     Pldsocket.on 'results', (datas) ->
       if datas.length
         $scope.ranking = for id, count of datas
           {'id':id, 'label': $scope.poll.choices[id], 'nbVotes':count}
         $scope.mode = 'results'
-        
+
     $scope.init = () ->
-      $scope.role = 'admin'
-      Pldsocket.emit 'initPoll'
+      # wait poll init confirmation from server
+      Pldsocket.emit 'initPoll', null, (confirmed) ->
+        if confirmed then $scope.role = 'admin'
 
     $scope.addChoice = () ->
 
@@ -51,20 +52,20 @@ angular.module('polldayApp')
       $scope.poll.removeChoice(choiceIndex)
 
     $scope.start = () ->
-      $scope.role = 'admin'
-      Pldsocket.emit 'newPoll', $scope.poll
-      $scope.mode = 'waiting'
+      # wait for new poll submission confirmation from server
+      Pldsocket.emit 'newPoll', $scope.poll, (confirmed) ->
+        if confirmed then $scope.mode = 'waiting'
 
     $scope.stop = () ->
-      $scope.role = 'user'
       Pldsocket.emit 'endPoll'
 
     $scope.vote = (index) ->
       if localStorage.getItem("authorId") == $scope.authorId
         return false
-      $scope.poll.answered = true
-      localStorage.setItem("authorId", $scope.authorId) 
-      Pldsocket.emit 'newVote', index 
-      
 
+      # wait for vote confirmation from server
+      Pldsocket.emit 'newVote', index, (confirmed) ->
+        $scope.poll.answered = true
+        localStorage.setItem("authorId", $scope.authorId)
+        if confirmed then localStorage.setItem("voted", true)
   ]
