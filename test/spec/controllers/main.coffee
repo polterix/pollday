@@ -13,6 +13,7 @@ describe 'Controller: MainCtrl', () ->
   pollDatas = {
     'title' : 'Poll title'
     'choices' : ['one', 'two', 'three']
+    'authorId' : '123456'
   }
 
   # Initialize the controller and a mock scope
@@ -46,8 +47,12 @@ describe 'Controller: MainCtrl', () ->
     expect(scope.mode).to.equal 'results'
 
   it 'user cannot vote many times', () ->
-    spy = sinon.spy(Pldsocket, "emit");
 
+    # a new poll event is received
+    Pldsocket.emit('newPoll', pollDatas)
+    
+    spy = sinon.spy(Pldsocket, "emit");
+    
     # user vote choice 0
     scope.vote(0);
 
@@ -63,13 +68,14 @@ describe 'Controller: MainCtrl', () ->
   it 'if a user already voted and a new poll event is received the user can vote again', () ->
 
     # user has already voted
-    localStorage.setItem('voted', true)
+    localStorage.setItem('authorId', 'abcde')
 
     # a new poll event is received
     Pldsocket.emit('newPoll', pollDatas)
-
     # user can vote again
-    expect(localStorage.getItem('voted')).to.not.equal(true)
+    scope.vote(0);
+
+    expect(localStorage.getItem('authorId')).to.equal('123456')
 
   it 'should update user role when user init a new poll and emit initPoll message', () ->
     socketEmitSpy = sinon.spy(Pldsocket, 'emit')

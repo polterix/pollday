@@ -16,7 +16,7 @@ angular.module('polldayApp')
       $scope.poll = new Poll(datas.title, datas.choices)
       $scope.ranking = []
       $scope.answererCount = 0
-      localStorage.removeItem("voted")
+      $scope.authorId = datas.authorId
 
     Pldsocket.on 'status', (datas) ->
       switch datas
@@ -24,7 +24,7 @@ angular.module('polldayApp')
         when 1 then $scope.mode = 'edit'
         when 2
           $scope.mode = 'normal'
-          if localStorage.getItem("voted") == 'true'
+          if localStorage.getItem("authorId") == $scope.authorId
             $scope.poll.answered = true 
         when 3 then $scope.mode = 'results'
         
@@ -60,10 +60,11 @@ angular.module('polldayApp')
       Pldsocket.emit 'endPoll'
 
     $scope.vote = (index) ->
-      if localStorage.getItem("voted")
+      if localStorage.getItem("authorId") == $scope.authorId
         return false
       $scope.poll.answered = true
+      localStorage.setItem("authorId", $scope.authorId) 
       Pldsocket.emit 'newVote', index 
-      localStorage.setItem("voted", true) 
+      
 
   ]
