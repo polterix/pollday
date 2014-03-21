@@ -20,6 +20,10 @@ angular.module('polldayApp')
       'reopen delay'              : 3000
       'max reconnection attempts' : Infinity
 
+    fingerprint = new Fingerprint().get()
+
+    options.query = "fingerprint=#{fingerprint}"
+
     ioSocket = io.connect "http://#{SOCKET.HOST}:#{SOCKET.PORT}", options
 
     ioSocket
