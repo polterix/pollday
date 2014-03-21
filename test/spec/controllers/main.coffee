@@ -50,9 +50,9 @@ describe 'Controller: MainCtrl', () ->
 
     # a new poll event is received
     Pldsocket.emit('newPoll', pollDatas)
-    
+
     spy = sinon.spy(Pldsocket, "emit");
-    
+
     # user vote choice 0
     scope.vote(0);
 
@@ -82,6 +82,9 @@ describe 'Controller: MainCtrl', () ->
 
     scope.role = "user"
     scope.init()
+
+    # simulate positive confirmation from server
+    socketEmitSpy.callArgWith(2, true)
 
     expect(scope.role).to.equal 'admin'
     expect(socketEmitSpy.calledWith('initPoll')).to.equal true
