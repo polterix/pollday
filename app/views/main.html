@@ -2,7 +2,7 @@
     <button class="btn btn-pollday btn-success btn-lg btn-block" ng-click="init()">Créer un sondage</button>
 </div>
 <div ng-show="mode == 'edit'">
-    <div ng-show="role == 'admin'">
+    <div ng-show="poll.author === user.id">
         <form class="form create-form" role="form" ng-submit="addChoice()">
             <fieldset>
                 <legend>Créer un sondage</legend>
@@ -31,7 +31,7 @@
         </div>
         <button class="btn btn-pollday btn-success btn-lg btn-block" ng-show="poll.choices.length" ng-click="start()">Commencer</button>
     </div>
-    <div class="waitting-msg" ng-show="role == 'user'">
+    <div class="waitting-msg" ng-show="poll.author !== user.id">
         <div class="box">
             <div class="clock"></div>
         </div>
@@ -44,7 +44,7 @@
 </div>
 
 <div ng-show="mode == 'normal'">
-    <div ng-class="{true:'answering', false:''}[(role == 'user' && !poll.answered)]" class="clearfix live-sondage-info">
+    <div ng-class="{true:'answering', false:''}[(poll.author !== user.id && !poll.answered)]" class="clearfix live-sondage-info">
         <div class="panel-box">
           <div class="panel-box-header">
             <span class="glyphicon glyphicon-list-alt"></span> Vote(s)
@@ -63,7 +63,7 @@
         </div>
     </div>
     
-    <form ng-submit="vote(answerIndex)" ng-show="role == 'user' && !poll.answered">
+    <form ng-submit="vote(answerIndex)" ng-show="poll.author !== user.id && !poll.answered">
         <h2>Participer au sondage : {{ poll.title }}</h2>
         <div class="icheck-radio-box" ng-repeat="choice in poll.choices">
             <label>
@@ -75,7 +75,7 @@
             <button class="btn btn-pollday btn-success btn-lg btn-block">Voter</button>
         </div>
     </form>
-    <div ng-show="(poll.answered || role == 'admin')">
+    <div ng-show="(poll.answered || poll.author === user.id)">
         <div class="answered-box">
             <h3>
                 Les résultats vont s'afficher dans un instant...
@@ -83,14 +83,13 @@
                     <div class="clock"></div>
                 </div>
             </h3>
-            
         </div>
 
-        <div class="admin-progress" ng-show="(role == 'admin')">
+        <div class="admin-progress" ng-show="poll.author === user.id">
             <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
         </div>
     </div>
-    <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="role == 'admin'">Arrêter</button>
+    <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="poll.author === user.id">Arrêter</button>
 </div>
 
 <div ng-show="mode == 'results'">

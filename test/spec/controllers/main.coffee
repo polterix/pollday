@@ -70,7 +70,7 @@ describe 'Controller: MainCtrl', () ->
     # check poll is marked has answered
     expect(scope.poll.answered).to.be.true
 
-  it 'should update user role when user init a new poll and emit initPoll message', () ->
+  it 'should send initPoll event and init new poll on init user call', () ->
     socketEmitSpy = sinon.spy(Pldsocket, 'emit')
 
     scope.init()
@@ -78,8 +78,11 @@ describe 'Controller: MainCtrl', () ->
     # simulate positive confirmation from server
     socketEmitSpy.callArgWith(2, true)
 
+    # check the initPoll event is sent
+    expect(socketEmitSpy.calledWith('initPoll')).to.be.true
+
+    # check the current poll author is the current user id
     expect(scope.poll.author).to.equal scope.user.id
-    expect(socketEmitSpy.calledWith('initPoll')).to.equal true
 
   it 'should prevent duplicate choices', () ->
 
