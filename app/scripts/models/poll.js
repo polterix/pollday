@@ -9,6 +9,8 @@
     this.results = [];
     this.answererCount = 0;
     this.answered = false;
+
+    this.resultsDatas = [];
   };
 
   Poll.prototype.markAsAnswered = function() {
@@ -24,7 +26,21 @@
     this.choices.splice(choiceIndex, 1);
   };
 
-  Poll.prototype.getRanking = function() {
+  Poll.prototype.updateResultsDatas = function() {
+    if (!this.results.length) {
+      return false;
+    }
+
+    var resultsDatas = [];
+    var choiceLength = this.choices.length;
+    for (var i = 0; i < choiceLength; i++) {
+      resultsDatas.push({
+        'title' : this.choices[i],
+        'value' : this.results[i]
+      });
+    }
+
+    this.resultsDatas = resultsDatas;
   };
 
   Poll.prototype.getResults = function() {

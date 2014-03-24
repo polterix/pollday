@@ -92,14 +92,14 @@
     <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="poll.author === user.id">Arrêter</button>
 </div>
 
-<div ng-show="mode == 'results'">
+<div ng-if="mode == 'results'" >
     <h2>Résultats du sondage : {{ poll.title }}</h2>
     <div>
         <ul class="results-list">
-            <li ng-repeat="result in poll.results track by $index">
-            <span class="label-txt">{{ $index + 1 }} - {{ poll.choices[$index] }} <small>({{ result }} vote(s) / {{ poll.answererCount }})</small></span>
-                <div progressbar progressmax="poll.answererCount" progressvalue="result">
-                    {{(100 * result / poll.answererCount) | number:0 }}%
+            <li ng-repeat="result in poll.resultsDatas | orderBy:'-value' track by $index ">
+            <span class="label-txt">{{ $index + 1 }} - {{ result.title }} <small>({{ result.value }} vote(s))</small></span>
+                <div progressbar progressmax="poll.answererCount" progressvalue="result.value">
+                    {{(100 * result.value / poll.answererCount) | number : 0 }}%
                 </div>
                 <span class="picto glyphicon glyphicon-star"></span>
             </li>

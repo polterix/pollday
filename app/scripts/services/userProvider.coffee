@@ -15,6 +15,7 @@ angular.module('polldayApp')
       fingerprint = new Fingerprint().get()
       if is_touch_device
         fingerprint += get_random_string()
+      return fingerprint
 
     class UserProvider
       getUser: () ->

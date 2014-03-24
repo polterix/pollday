@@ -16,6 +16,7 @@ angular.module('polldayApp')
     # on poll update
     Pldsocket.on 'newPoll', (datas) ->
       $scope.poll = Poll.prototype.fromDatas(datas)
+      $scope.poll.updateResultsDatas()
 
     # on status update
     Pldsocket.on 'status', (datas) ->
@@ -28,6 +29,7 @@ angular.module('polldayApp')
     # on results update
     Pldsocket.on 'results', (datas) ->
       $scope.poll.results = datas
+      $scope.poll.updateResultsDatas()
 
     $scope.init = () ->
       # wait poll init confirmation from server
