@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('polldayApp')
-  .factory('Pldsocket', ['socketFactory', 'SOCKET', (socketFactory, SOCKET) ->
+  .factory('Pldsocket', ['socketFactory', 'userProvider', 'SOCKET', (socketFactory, userProvider, SOCKET) ->
 
     options =
       'connect timeout'           : 7000
@@ -20,14 +20,14 @@ angular.module('polldayApp')
       'reopen delay'              : 3000
       'max reconnection attempts' : Infinity
 
-    fingerprint = new Fingerprint().get()
+    user = userProvider.getUser()
 
-    options.query = "fingerprint=#{fingerprint}"
+    options.query = "fingerprint=#{user.id}"
 
     ioSocket = io.connect "http://#{SOCKET.HOST}:#{SOCKET.PORT}", options
 
     ioSocket
-      .on 'error', () ->
+      .on 'error', (e) ->
         if !ioSocket.socket.reconnecting
           ioSocket.socket.reconnect()
       .on 'disconnect', () ->

@@ -1,31 +1,48 @@
 (function() {
   'use strict';
 
-  var Poll = function(title, choices) {
-    this.title = title
+  var Poll = function(id, title, choices) {
+    this.id = id;
+    this.title = title;
     this.choices = choices || [];
     this.results = [];
-  }
+    this.answererCount = 0;
+    this.answered = false;
+  };
+
+  Poll.prototype.markAsAnswered = function() {
+    this.answered = true;
+    return this;
+  };
 
   Poll.prototype.addChoice = function (choiceText) {
-    this.choices.push(choiceText)
-  }
+    this.choices.push(choiceText);
+  };
 
   Poll.prototype.removeChoice = function (choiceIndex) {
     this.choices.splice(choiceIndex, 1);
-  }
+  };
 
-  Poll.prototype.answer = function(choiceIndex) {
-    if (typeof this.results[choiceIndex] !== "undefined") {
-      this.results[choiceIndex]++;
-    } else {
-      this.results[choiceIndex] = 1;
-    }
-  }
+  Poll.prototype.getRanking = function() {
+  };
 
   Poll.prototype.getResults = function() {
     return this.results;
-  }
+  };
+
+  Poll.prototype.fromDatas = function(datas) {
+    var poll = new Poll(datas.id, datas.title, datas.choices);
+    poll.author = datas.authorId;
+    return poll;
+  };
+
+  Poll.prototype.toDatas = function() {
+    return {
+      id: this.id,
+      title: this.title,
+      choices: this.choices
+    };
+  };
 
   window.Poll = Poll;
 

@@ -5,6 +5,9 @@ angular.module("polldayApp")
     class Pldsocket
       constructor: () ->
         @events = {}
+        @socket = {
+          'id': 'socket_id'
+        }
 
       on: (eventName, callback) ->
         if typeof @events[eventName] is 'undefined'

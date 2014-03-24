@@ -26,12 +26,17 @@ describe 'Controller: MainCtrl', () ->
     MainCtrl = $controller 'MainCtrl', {
       $scope: scope
       Pldsocket: Pldsocket
+      userProvider: {
+        getUser: () ->
+          return new User('user_id')
+      }
     }
 
   it 'should update the scope poll value on newPoll event', () ->
     Pldsocket.emit('newPoll', pollDatas)
     expect(scope.poll.title).to.equal pollDatas.title
     expect(scope.poll.choices).to.equal pollDatas.choices
+    expect(scope.poll.author).to.equal pollDatas.authorId
 
   it 'should update the scope mode value on status event', () ->
     Pldsocket.emit('status', 0)
@@ -46,50 +51,40 @@ describe 'Controller: MainCtrl', () ->
     Pldsocket.emit('status', 3)
     expect(scope.mode).to.equal 'results'
 
-  it 'user cannot vote many times', () ->
+  it 'should emit newVote event when user vote and mark poll answered', () ->
 
     # a new poll event is received
     Pldsocket.emit('newPoll', pollDatas)
 
-    spy = sinon.spy(Pldsocket, "emit");
+    spy = sinon.spy(Pldsocket, "emit")
 
     # user vote choice 0
-    scope.vote(0);
+    scope.vote(0)
+
+    # simulate positive confirmation from server
+    spy.callArgWith(2, true)
 
     # check Pldsocket.emit function is called
-    expect(spy.calledOnce).to.equal(true);
+    expect(spy.calledOnce).to.be.true
 
-    # user vote choice 1
-    scope.vote(1);
-
-    # check Pldsocket.emit function not called again
-    expect(spy.calledTwice).to.not.equal(true);
-
-  it 'if a user already voted and a new poll event is received the user can vote again', () ->
-
-    # user has already voted
-    localStorage.setItem('authorId', 'abcde')
-
-    # a new poll event is received
-    Pldsocket.emit('newPoll', pollDatas)
-    # user can vote again
-    scope.vote(0);
-
-    expect(localStorage.getItem('authorId')).to.equal('123456')
+    # check poll is marked has answered
+    expect(scope.poll.answered).to.be.true
 
   it 'should update user role when user init a new poll and emit initPoll message', () ->
     socketEmitSpy = sinon.spy(Pldsocket, 'emit')
 
-    scope.role = "user"
     scope.init()
 
     # simulate positive confirmation from server
     socketEmitSpy.callArgWith(2, true)
 
-    expect(scope.role).to.equal 'admin'
+    expect(scope.poll.author).to.equal scope.user.id
     expect(socketEmitSpy.calledWith('initPoll')).to.equal true
 
   it 'should prevent duplicate choices', () ->
+
+    scope.poll = new Poll.prototype.fromDatas(pollDatas)
+
     scope.poll.choices = ['one', 'two']
 
     scope.choiceText = 'one'
