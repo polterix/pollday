@@ -5,6 +5,7 @@
     this.id = id;
     this.title = title;
     this.choices = choices || [];
+
     this.results = [];
     this.answererCount = 0;
     this.answered = false;
@@ -33,6 +34,8 @@
   Poll.prototype.fromDatas = function(datas) {
     var poll = new Poll(datas.id, datas.title, datas.choices);
     poll.author = datas.authorId;
+    poll.answererCount = datas.answererCount;
+    poll.results = datas.results;
     return poll;
   };
 

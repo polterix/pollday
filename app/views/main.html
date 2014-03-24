@@ -50,7 +50,7 @@
             <span class="glyphicon glyphicon-list-alt"></span> Vote(s)
           </div>
           <div class="panel-box-body">
-            {{ answererCount }}
+            {{ poll.answererCount }}
           </div>
         </div>
         <div class="panel-box">
@@ -62,7 +62,7 @@
           </div>
         </div>
     </div>
-    
+
     <form ng-submit="vote(answerIndex)" ng-show="poll.author !== user.id && !poll.answered">
         <h2>Participer au sondage : {{ poll.title }}</h2>
         <div class="icheck-radio-box" ng-repeat="choice in poll.choices">
@@ -86,7 +86,7 @@
         </div>
 
         <div class="admin-progress" ng-show="poll.author === user.id">
-            <div progressbar progressmax="connectedUsers" progressvalue="answererCount"></div>
+            <div progressbar progressmax="connectedUsers" progressvalue="poll.answererCount"></div>
         </div>
     </div>
     <button class="btn btn-primary btn-stop btn-lg btn-block" ng-click="stop()" ng-show="poll.author === user.id">Arrêter</button>
@@ -96,10 +96,10 @@
     <h2>Résultats du sondage : {{ poll.title }}</h2>
     <div>
         <ul class="results-list">
-            <li ng-repeat="result in ranking | orderBy:'-nbVotes':false">
-                <span class="label-txt">{{ $index+1 }} - {{ result.label }} <small>({{ result.nbVotes }} vote(s))</small></span>
-                <div progressbar progressmax="answererCount" progressvalue="result.nbVotes">
-                    {{(100*result.nbVotes/answererCount)| number:0}}%
+            <li ng-repeat="result in poll.results track by $index">
+            <span class="label-txt">{{ $index + 1 }} - {{ poll.choices[$index] }} <small>({{ result }} vote(s) / {{ poll.answererCount }})</small></span>
+                <div progressbar progressmax="poll.answererCount" progressvalue="result">
+                    {{(100 * result / poll.answererCount) | number:0 }}%
                 </div>
                 <span class="picto glyphicon glyphicon-star"></span>
             </li>
